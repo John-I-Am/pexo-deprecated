@@ -1,4 +1,11 @@
 {
-  "include": ["**/*.ts"],
-  "extends": "../tsconfig-base.json"
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["es5", "dom", "ES2017"],
+  },
+  "include": [
+    "e2e/**/*.ts",
+    "support/**/*.ts",
+  ],
+  "extends": "../tsconfig-base.json",
 }
