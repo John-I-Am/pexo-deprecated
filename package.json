@@ -7,7 +7,9 @@
     "cypress:open": "cypress open",
     "build:ui": "cd client && npm run build && cd ../server && npm run build",
     "build:deploy": "npm run build:ui && cd client && mv build ../server",
-    "start": "cd server && npm run start"
+    "start": "cd server && npm install && npm run start",
+    "start:cypress:client": "cd client && npm start",
+    "start:cypress:server": "cd server && npm run dev"
   },
   "author": "",
   "license": "ISC",

@@ -1,0 +1,38 @@
+name: Deployment pipeline
+
+env:
+  DATABASE_URL_TEST: postgresql://postgres:postgres@localhost/postgres
+  PORT: 3001
+  SECRET: ${{secrets.SECRET}}
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: npm install
+        run: npm install && cd server && npm install && cd ../client && npm install
+      - name: build
+        run: npm run build:deploy    
+      - uses: ikalnytskyi/action-setup-postgres@v4   
+      - name: e2e tests
+        uses: cypress-io/github-action@v4
+        with:
+          start: npm run start:cypress:client, npm run start:cypress:server
+          wait-on: 'http://localhost:3000, http://localhost:3001'
+      - uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+      - uses: akhileshns/heroku-deploy@v3.12.13
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: pexocards
+          heroku_email: ${{secrets.HEROKU_API_EMAIL}}
