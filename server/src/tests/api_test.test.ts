@@ -2,15 +2,15 @@
 import supertest from "supertest";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {
+  NewCard, NewUser, UserCredentials,
+} from "types";
 import helper from "./test_helper";
 import User from "../models/user";
 import Deck from "../models/deck";
 import Card from "../models/card";
 
 import app from "../app";
-import {
-  NewCard, NewUser, UserCredential,
-} from "../types";
 import db from "../utils/db";
 
 const api = supertest(app);
@@ -75,7 +75,7 @@ describe("what happens when there is initally one user", () => {
   });
 
   test("if user can login and if token is returned", async () => {
-    const userCredentials: UserCredential = {
+    const userCredentials: UserCredentials = {
       email: "root@root.com",
       password: "root",
     };
@@ -100,7 +100,7 @@ describe("what happens when there is initally one user", () => {
   describe("what happens after user is logged in", () => {
     let token: any;
     let userId: any;
-    const userCredentials: UserCredential = {
+    const userCredentials: UserCredentials = {
       email: "root@root.com",
       password: "root",
     };

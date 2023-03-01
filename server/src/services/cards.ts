@@ -1,6 +1,6 @@
+import { NewCard, UpdatedCard } from "types";
 import Card from "../models/card";
 import Deck from "../models/deck";
-import { NewCard, UpdatedCard } from "../types";
 
 const createCard = async (deckId: number, cardToCreate: NewCard): Promise<any> => {
   const savedDeck: Deck | null = await Deck.findByPk(deckId);

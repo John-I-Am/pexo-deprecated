@@ -1,5 +1,5 @@
 import axios from "axios";
-import { NewUser, UserCredentials } from "../types";
+import { NewUser, UserCredentials } from "types";
 
 const register = async (newUser: NewUser): Promise<void> => {
   const response = await axios.post("/api/users", newUser);

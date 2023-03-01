@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UserCredentials } from "types";
 import User from "../models/user";
-import { UserCredential } from "../types";
 
-const authUser = async (userToAuth: UserCredential): Promise<false | object> => {
+const authUser = async (userToAuth: UserCredentials): Promise<false | object> => {
   const user: User | null = await User.findOne({
     where: { email: userToAuth.email },
     attributes: {

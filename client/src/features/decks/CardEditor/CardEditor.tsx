@@ -7,6 +7,9 @@ import {
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import {
+  Card, CardType, DictionaryEntry, NewCard,
+} from "types";
+import {
   TagList, Container, MainContent, SecondaryContent, InputContainer,
 } from "./style";
 import { Error } from "../../../sharedStyles";
@@ -14,10 +17,6 @@ import { Error } from "../../../sharedStyles";
 import { useAppSelector } from "../../../hooks/hooks";
 import dictionaryService from "../../../services/dictionary";
 import { useCreateCardMutation, useUpdateCardMutation } from "../../api/apiSlice";
-
-import {
-  Card, CardType, DictionaryEntry, NewCard,
-} from "../../../types";
 
 type FormValueWord = {
   word: string

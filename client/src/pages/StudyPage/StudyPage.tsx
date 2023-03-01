@@ -1,11 +1,11 @@
 import { ReactElement, useState } from "react";
+import { Card } from "types";
 import { useActiveDeck, useCardsDue } from "../../hooks/hooks";
 import CardComponent from "../../features/decks/Card/Card";
 import DeckList from "../../features/decks/DeckList/DeckList";
 
 import { Container, NoCards } from "./styles";
 import done from "../../assets/done.svg";
-import { Card } from "../../types";
 import CardNote from "../../features/decks/CardNote/CardNote";
 
 const Cardless = (): ReactElement => (

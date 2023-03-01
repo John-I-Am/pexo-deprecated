@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import User from "../models/user";
 import {
   NewUser,
   UpdatedUser,
-} from "../types";
+} from "types";
+import User from "../models/user";
 import Deck from "../models/deck";
 
 const createUser = async (newUser: NewUser): Promise<User> => {

@@ -47,3 +47,30 @@ export interface CombinedDeck {
   title: "",
   cards: Array<Card>
 }
+
+export interface DecodedToken {
+  userId: number,
+}
+
+export interface UpdatedUser {
+  email: string | undefined,
+  name: string | undefined,
+  surname: string | undefined,
+  currentPassword: string | undefined,
+  newPassword: string | undefined
+}
+
+export interface UpdatedCard {
+  type: CardType | undefined,
+  tags: Array<string> | undefined,
+  deckId: number | undefined,
+  front: string | undefined,
+  back: string | undefined,
+  level: number | undefined,
+  audio: string| undefined,
+  examples: Array<string> | undefined,
+}
+
+export interface UpdatedDeck {
+  title: string,
+}

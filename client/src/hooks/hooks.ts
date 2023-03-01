@@ -1,7 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { Card, Deck } from "types";
 import { useGetDecksQuery } from "../features/api/apiSlice";
 import type { RootState, AppDispatch } from "../store";
-import { Card, Deck } from "../types";
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;

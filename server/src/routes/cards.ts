@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { NewCard, UpdatedCard } from "../types";
+import { NewCard, UpdatedCard } from "types";
 import cardsService from "../services/cards";
 import typeguards from "../typeguards";
 import middleware from "../utils/middleware";

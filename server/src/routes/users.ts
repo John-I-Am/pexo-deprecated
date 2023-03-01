@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { NewUser, UpdatedUser } from "../types";
+import { NewUser, UpdatedUser } from "types";
 import typeguards from "../typeguards";
 import userService from "../services/users";
 import middleware from "../utils/middleware";

@@ -1,13 +1,13 @@
 import { ActionIcon, Modal, Text } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { ReactElement, useState } from "react";
+import { Card } from "types";
 import { Table, ToolBar } from "./styles";
 import { useDeleteCardMutation } from "../../api/apiSlice";
 import CardEditor from "../CardEditor/CardEditor";
 
 import { ReactComponent as Edit } from "../../../assets/edit.svg";
 import { ReactComponent as Delete } from "../../../assets/delete.svg";
-import { Card } from "../../../types";
 
 const CardList = ({ cards, viewOnly }: any): ReactElement => {
   const [opened, setOpened] = useState<boolean>(false);

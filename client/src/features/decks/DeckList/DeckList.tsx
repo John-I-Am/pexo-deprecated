@@ -1,6 +1,7 @@
 import { ReactElement, useState } from "react";
 
 import { Badge, Button } from "@mantine/core";
+import { Deck } from "types";
 import {
   DeckSelector, Container, Tags,
 } from "./styles";
@@ -10,7 +11,6 @@ import {
 } from "../../../hooks/hooks";
 import { addTag, setActive } from "../decksSlice";
 import { useAddNewDeckMutation, useGetDecksQuery } from "../../api/apiSlice";
-import { Deck } from "../../../types";
 import { SearchBar } from "../../../sharedStyles";
 import { RootState } from "../../../store";
 

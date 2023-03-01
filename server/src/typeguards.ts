@@ -3,8 +3,8 @@
 /* eslint-disable consistent-return */
 import {
   CardType,
-  NewCard, NewUser, UpdatedCard, UpdatedDeck, UpdatedUser, UserCredential,
-} from "./types";
+  NewCard, NewUser, UpdatedCard, UpdatedDeck, UpdatedUser, UserCredentials,
+} from "types";
 
 const isString = (text: unknown): text is string => typeof text === "string" || text instanceof String;
 
@@ -77,8 +77,8 @@ const toUpdatedUser = (object: any): UpdatedUser => {
   return updatedUser;
 };
 
-const toUserCredential = (object: any): UserCredential => {
-  const userCredential: UserCredential = {
+const toUserCredential = (object: any): UserCredentials => {
+  const userCredential: UserCredentials = {
     email: parseTextContent(object.email),
     password: parseTextContent(object.password),
   };
