@@ -1,3 +1,14 @@
+export interface DecodedToken {
+  userId: number,
+}
+
+declare module "express-serve-static-core" {
+  // eslint-disable-next-line no-unused-vars
+  interface Request {
+    decodedToken: DecodedToken
+  }
+}
+
 export interface UserCredentials {
   email: string,
   password: string
@@ -46,10 +57,6 @@ export interface Deck {
 export interface CombinedDeck {
   title: "",
   cards: Array<Card>
-}
-
-export interface DecodedToken {
-  userId: number,
 }
 
 export interface UpdatedUser {

@@ -6,8 +6,8 @@
       "cypress/globals": true
   },
   "extends": [
-      "plugin:react/recommended",
-      "airbnb"
+    "airbnb",
+    "airbnb/hooks"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -18,10 +18,8 @@
       "sourceType": "module"
   },
   "plugins": [
-      "react",
-      "@typescript-eslint",
-      "cypress",
-      "react-hooks"
+    "@typescript-eslint",
+    "cypress"
   ],
   "rules": {
       "quotes": [2, "double"],
