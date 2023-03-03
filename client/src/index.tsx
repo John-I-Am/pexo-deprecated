@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import { NotificationsProvider } from "@mantine/notifications";
+import { Notifications } from "@mantine/notifications";
 
 import reportWebVitals from "./reportWebVitals";
 
@@ -28,35 +28,34 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <MantineProvider>
-      <NotificationsProvider>
-        <ModalsProvider>
-          <Provider store={store}>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="login" element={<LoginPage />} />
-                <Route path="signup" element={<SignupPage />} />
-                <Route path="main" element={<MainPage />}>
-                  <Route path="learn" element={<StudyPage />} />
-                  <Route path="discover" element={<DiscoverPage />} />
-                  <Route path="dashboard" element={<DashboardPage />} />
-                  <Route path="account" element={<AccountPage />} />
-                  <Route path="editor" element={<DeckEditorPage />} />
-                  <Route index element={(<DashboardPage />)} />
-                </Route>
-                <Route
-                  path="*"
-                  element={(
-                    <main style={{ padding: "1rem" }}>
-                      <p>There nothing here!</p>
-                    </main>
+      <Notifications />
+      <ModalsProvider>
+        <Provider store={store}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="signup" element={<SignupPage />} />
+              <Route path="main" element={<MainPage />}>
+                <Route path="learn" element={<StudyPage />} />
+                <Route path="discover" element={<DiscoverPage />} />
+                <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="editor" element={<DeckEditorPage />} />
+                <Route index element={(<DashboardPage />)} />
+              </Route>
+              <Route
+                path="*"
+                element={(
+                  <main style={{ padding: "1rem" }}>
+                    <p>There nothing here!</p>
+                  </main>
             )}
-                />
-              </Routes>
-            </BrowserRouter>
-          </Provider>
-        </ModalsProvider>
-      </NotificationsProvider>
+              />
+            </Routes>
+          </BrowserRouter>
+        </Provider>
+      </ModalsProvider>
     </MantineProvider>
 
   </React.StrictMode>,
