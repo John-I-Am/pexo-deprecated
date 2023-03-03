@@ -4,7 +4,7 @@
 import {
   CardType,
   NewCard, NewUser, UpdatedCard, UpdatedDeck, UpdatedUser, UserCredentials,
-} from "types";
+} from "./types";
 
 const isString = (text: unknown): text is string => typeof text === "string" || text instanceof String;
 
@@ -54,7 +54,7 @@ const parseCardType = (content: unknown): CardType => {
   return content;
 };
 
-const toNewUser = (object: any): NewUser => {
+export const toNewUser = (object: any): NewUser => {
   const newUser: NewUser = {
     email: parseTextContent(object.email),
     name: parseTextContent(object.name),
@@ -65,7 +65,7 @@ const toNewUser = (object: any): NewUser => {
   return newUser;
 };
 
-const toUpdatedUser = (object: any): UpdatedUser => {
+export const toUpdatedUser = (object: any): UpdatedUser => {
   const updatedUser: UpdatedUser = {
     email: object.email !== undefined ? parseTextContent(object.email) : undefined,
     name: object.name !== undefined ? parseTextContent(object.name) : undefined,
@@ -77,7 +77,7 @@ const toUpdatedUser = (object: any): UpdatedUser => {
   return updatedUser;
 };
 
-const toUserCredential = (object: any): UserCredentials => {
+export const toUserCredential = (object: any): UserCredentials => {
   const userCredential: UserCredentials = {
     email: parseTextContent(object.email),
     password: parseTextContent(object.password),
@@ -86,7 +86,7 @@ const toUserCredential = (object: any): UserCredentials => {
   return userCredential;
 };
 
-const toNewCard = (object: any): NewCard => {
+export const toNewCard = (object: any): NewCard => {
   const newCard: NewCard = {
     type: parseCardType(object.type),
     tags: object.tags !== undefined ? parseArrayContent(object.tags) : undefined,
@@ -101,7 +101,7 @@ const toNewCard = (object: any): NewCard => {
   return newCard;
 };
 
-const toUpdatedCard = (object: any): UpdatedCard => {
+export const toUpdatedCard = (object: any): UpdatedCard => {
   const updatedCard: UpdatedCard = {
     type: object.type !== undefined ? parseCardType(object.type) : undefined,
     tags: object.tags !== undefined ? parseArrayContent(object.tags) : undefined,
@@ -116,19 +116,10 @@ const toUpdatedCard = (object: any): UpdatedCard => {
   return updatedCard;
 };
 
-const toUpdatedDeck = (object: any): UpdatedDeck => {
+export const toUpdatedDeck = (object: any): UpdatedDeck => {
   const updatedDeck: UpdatedDeck = {
     title: parseTextContent(object.title),
   };
 
   return updatedDeck;
-};
-
-export default {
-  toNewUser,
-  toUserCredential,
-  toUpdatedCard,
-  toNewCard,
-  toUpdatedUser,
-  toUpdatedDeck,
 };

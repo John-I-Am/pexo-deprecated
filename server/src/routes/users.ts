@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { NewUser, UpdatedUser } from "types";
-import typeguards from "../typeguards";
+import { toNewUser, toUpdatedUser } from "typeguards";
 import userService from "../services/users";
 import middleware from "../utils/middleware";
 import User from "../models/user";
@@ -8,7 +8,7 @@ import User from "../models/user";
 const usersRouter = express.Router();
 
 usersRouter.post("/", async (request: Request, response: Response): Promise<void> => {
-  const newUser: NewUser = typeguards.toNewUser(request.body);
+  const newUser: NewUser = toNewUser(request.body);
   const user: User = await userService.createUser(newUser);
   response.json(user);
 });
@@ -28,7 +28,7 @@ usersRouter.get("/:id", middleware.tokenExtractor, async (request: Request, resp
 });
 
 usersRouter.put("/:id", middleware.tokenExtractor, async (request: Request, response: Response): Promise<void> => {
-  const updatedUser: UpdatedUser = typeguards.toUpdatedUser(request.body);
+  const updatedUser: UpdatedUser = toUpdatedUser(request.body);
   const user: User | null = await userService.updateUser(
     updatedUser,
     +request.params.id,

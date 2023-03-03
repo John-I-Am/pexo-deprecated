@@ -1,14 +1,14 @@
 import express, { Request, Response } from "express";
 import { NewCard, UpdatedCard } from "types";
+import { toNewCard, toUpdatedCard } from "typeguards";
 import cardsService from "../services/cards";
-import typeguards from "../typeguards";
 import middleware from "../utils/middleware";
 import Card from "../models/card";
 
 const cardsRouter = express.Router();
 
 cardsRouter.post("/", middleware.tokenExtractor, async (request: Request, response: Response): Promise<void> => {
-  const newCard: NewCard = typeguards.toNewCard(request.body);
+  const newCard: NewCard = toNewCard(request.body);
   const savedCard: Card = await cardsService.createCard(
     request.body.deckId,
     newCard,
@@ -33,7 +33,7 @@ cardsRouter.get("/:id", middleware.tokenExtractor, async (request: Request, resp
 });
 
 cardsRouter.put("/:id", middleware.tokenExtractor, async (request: Request, response: Response): Promise<void> => {
-  const updatedCard: UpdatedCard = typeguards.toUpdatedCard(request.body);
+  const updatedCard: UpdatedCard = toUpdatedCard(request.body);
   const result: Card | null = await cardsService.updateCard(updatedCard, +request.params.id);
 
   response.json(result);

@@ -2,8 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "types": ["types.ts"]
-    },
+      "types": ["types/types.ts"],
+      "typeguards": ["types/typeguards.ts"]
+    },                        
     "lib": [
       "dom",
       "dom.iterable",

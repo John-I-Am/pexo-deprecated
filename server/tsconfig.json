@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "module": "commonjs",    
-    "outDir": "./build-server",  
-    "types": ["node", "jest", "@testing-library/jest-dom"]                           
+    "outDir": "./build-server",                       
   },
   "extends": "../tsconfig-base.json",
   "include": ["src"],
