@@ -1,5 +1,11 @@
 import styled from "styled-components";
 
+export const themeDefault = {
+  headings: {
+    fontFamily: "Varela Round",
+  },
+};
+
 export const device = {
   mobileS: "(max-width: 320px)",
   mobileM: "(max-width: 375px)",

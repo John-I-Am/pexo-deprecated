@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
+import { themeDefault } from "./sharedStyles";
 
 import reportWebVitals from "./reportWebVitals";
 
@@ -27,7 +28,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <MantineProvider>
+    <MantineProvider theme={themeDefault}>
       <Notifications />
       <ModalsProvider>
         <Provider store={store}>
