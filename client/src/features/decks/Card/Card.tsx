@@ -3,7 +3,7 @@ import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useUpdateCardMutation } from "../../api/apiSlice";
-import CardToolbar from "../CardToolbar/CardToolbar";
+import CardToolbar from "../../../components/CardToolbar";
 import {
   Container, CardFront, CardBack, GuessForm,
 } from "./styles";
