@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { ReactElement, useState } from "react";
 import { Card } from "types";
 import { useActiveDeck, useCardsDue } from "../../hooks/hooks";
@@ -6,7 +7,6 @@ import TagList from "../../components/TagList";
 
 import { Container, NoCards } from "./styles";
 import done from "../../assets/images/done.svg";
-import CardNote from "../../features/decks/CardNote/CardNote";
 
 const Cardless = (): ReactElement => (
   <NoCards>
@@ -27,15 +27,8 @@ const StudyPage = (): ReactElement => {
     <Container>
       <TagList />
       {cardsToStudy.length !== 0
-        ? (
-          <>
-            <CardComponent cardToStudy={cardsToStudy[0]} showNotes={setAnswerChecked} />
-            <CardNote notes={cardsToStudy[0]?.examples} visible={answerChecked} />
-          </>
-        )
-        : (
-          <Cardless />
-        )}
+        ? <CardComponent cardToStudy={cardsToStudy[0]} showNotes={setAnswerChecked} />
+        : <Cardless />}
     </Container>
   );
 };

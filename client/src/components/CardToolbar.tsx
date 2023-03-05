@@ -8,7 +8,7 @@ import {
   IconX, IconCheck, IconChevronRight, IconVolume, IconNote,
 } from "@tabler/icons-react";
 
-import CardNote from "../features/decks/CardNote/CardNote";
+import CardNote from "./CardNote";
 
 interface CardToolbarProps {
   card: Card;
