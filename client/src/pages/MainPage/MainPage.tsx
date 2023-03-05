@@ -1,13 +1,22 @@
 import { Outlet } from "react-router-dom";
-import { ReactElement, useRef } from "react";
+import { ReactElement, useRef, useState } from "react";
+import { Burger, createStyles } from "@mantine/core";
 
-import { ActionIcon } from "@mantine/core";
 import { setUser } from "../../features/users/usersSlice";
 import { useAppDispatch } from "../../hooks/hooks";
 
-import NavBar from "../../components/NavBar/NavBar";
+import NavBar from "../../components/NavBar";
 import { Container } from "./styles";
-import { ReactComponent as ChevronRight } from "../../assets/chevronRight.svg";
+
+const useStyles = createStyles((theme) => ({
+  burger: {
+    zIndex: 2,
+
+    [`@media (min-width: ${theme.breakpoints.sm})`]: {
+      display: "none",
+    },
+  },
+}));
 
 interface localStorage {
   token: string
@@ -16,7 +25,9 @@ interface localStorage {
 
 const MainPage = (): ReactElement => {
   const dispatch = useAppDispatch();
-  const expandRef: any = useRef();
+  const [open, setOpened] = useState<boolean>(false);
+  const navBarRef: any = useRef();
+  const { classes } = useStyles();
 
   let currentUserParsed: localStorage | null;
   const currentUser: string | null = window.localStorage.getItem("currentUser");
@@ -27,12 +38,15 @@ const MainPage = (): ReactElement => {
     alert("Session expired or user not found");
   }
 
+  const handleOpen = () => {
+    setOpened(!open);
+    navBarRef.current.toggleExpanded();
+  };
+
   return (
     <Container>
-      <NavBar ref={expandRef} />
-      <ActionIcon className="expand-drawer" onClick={() => expandRef.current.toggleExpanded()}>
-        <ChevronRight />
-      </ActionIcon>
+      <NavBar ref={navBarRef} />
+      <Burger className={classes.burger} opened={open} onClick={handleOpen} />
       <Outlet />
     </Container>
   );

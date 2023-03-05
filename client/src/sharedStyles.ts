@@ -92,16 +92,6 @@ export const Input = styled.input`
 }
 `;
 
-export const SearchBar = styled.input`
-  height: 100%;
-  border-radius: ${spacing.smallest};
-  border: none;
-  background: white;
-  box-sizing: border-box;
-  padding-left: ${spacing.default};
-  width: 100px;
-`;
-
 export const Label = styled.label`
   font-size: ${spacing.small};
   padding-left: ${spacing.default};
