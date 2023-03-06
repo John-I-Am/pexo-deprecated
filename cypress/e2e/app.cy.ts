@@ -14,11 +14,12 @@ describe("App", () => {
   });
 
   it("front page can be opened", () => {
-    cy.contains("A Modern Spaced Repetition System");
+    cy.contains("Pexo - A modern spaced repetition system");
   });
 
   it("user can log in", function () {
-    cy.contains("Log in").click();
+    cy.contains("Join beta").click();
+    cy.contains("here").click();
     cy.get("input:first").type("root1@root.com");
     cy.get("input:last").type("rootPass123");
     cy.contains("Login").click();
@@ -27,7 +28,8 @@ describe("App", () => {
   });
 
   it("login fails with wrong password", function () {
-    cy.contains("Log in").click();
+    cy.contains("Join beta").click();
+    cy.contains("here").click();
     cy.get("input:first").type("ro11@root.com");
     cy.get("input:last").type("wrongPassword");
     cy.contains("Login").click();
@@ -41,54 +43,44 @@ describe("App", () => {
     });
 
     it("New Deck can be created", function () {
-      cy.get("#nav_editor").click();
-      cy.contains("New").click();
+      cy.get("#nav_Editor").click();
+      cy.contains("Decks").click();
+      cy.contains("Create").click();
     });
 
-    // it("New Card can be created", function () {
-    //   cy.get("#nav_editor").click();
-    //   cy.contains("All").click();
-    //   cy.contains("untitled").click();
+    it("New Card can be created", function () {
+      cy.get("#nav_Editor").click();
+      cy.contains("Decks").click();
+      cy.contains("untitled").click();
 
-    //   cy.contains("New Card").parent().within(() => {
-    //     cy.get("svg").click();
-    //   });
+      cy.get("#add_card").click();
 
-    //   cy.get("#cardEditor").within(() => {
-    //     cy.get("#input_front").type("testing front", { force: true });
-    //     cy.get("#input_back").type("testing back", { force: true });
-    //     cy.get("#input_cloze").click();
-    //     cy.contains("Create").click();
-    //   });
+      cy.get("#cardEditor").within(() => {
+        cy.get("#input_front").type("testing front", { force: true });
+        cy.get("#input_back").type("testing back", { force: true });
+        cy.get("#input_cloze").click({ force: true });
+        cy.contains("Create").click({ force: true });
+      });
+    });
 
-    //   cy.contains("Total Cards: 2");
-    // });
+    it("Card can be edited", function () {
+      cy.get("#nav_Editor").click();
+      cy.contains("Decks").click();
+      cy.contains("untitled").click();
+      cy.get("#edit").click();
+      cy.get("#input_front").type("edited front", { force: true });
+      cy.get("#input_back").type("edited back", { force: true });
+      cy.get("#create").click({ force: true });
 
-    // it("Card can be edited", function () {
-    //   cy.get("#nav_editor").click();
-    //   cy.contains("untitled").click();
-    //   cy.get("#edit").click();
-    //   cy.get("#input_front").type("edited front", { force: true });
-    //   cy.get("#input_back").type("edited back", { force: true });
-    //   cy.get("#create").click({ force: true });
+      cy.get("body").click(0, 0);
+    });
 
-    //   cy.get("body").click(0, 0);
-    //   cy.contains("Total Cards: 1");
-    //   cy.contains("edited front");
-    // });
-
-    // it("demo deck can be added", function () {
-    //   cy.get("#discover").click();
-    //   cy.contains("Alphabet").parent().parent().within(() => {
-    //     cy.contains("Add Deck").click();
-    //   });
-    //   cy.get("#nav_editor").click();
-    //   cy.contains("All").click();
-    //   cy.contains("Total Cards: 27");
-    // });
+    it("demo deck can be added", function () {
+      cy.get("#nav_Discover").click();
+      cy.contains("Alphabet").parent().parent().within(() => {
+        cy.contains("Add Deck").click();
+      });
+      cy.get("#nav_Editor").click();
+    });
   });
 });
-
-// cy.get('.error').should('contain', 'wrong credentials')
-// cy.get('.error').should('have.css', 'color', 'rgb(255, 0, 0)')
-// cy.get('.error').should('have.css', 'border-style', 'solid')

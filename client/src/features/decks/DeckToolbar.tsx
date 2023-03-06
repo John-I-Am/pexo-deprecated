@@ -85,7 +85,7 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
         <SearchBar callback={searchCallback} />
         <Group>
           <Group>
-            <ActionIcon size="xl" disabled={!deck?.id} onClick={() => open()}><IconPlus /></ActionIcon>
+            <ActionIcon id="add_card" size="xl" disabled={!deck?.id} onClick={() => open()}><IconPlus /></ActionIcon>
             <Text fz="sm">New Card</Text>
           </Group>
           <Group>
