@@ -141,6 +141,7 @@ const NavBar = forwardRef((props, refs): ReactElement => {
 
   const links = navs.map((item) => (
     <Link
+      id={`nav_${item.label}`}
       className={cx(classes.link, {
         [classes.linkCompact]: !expanded,
         [classes.linkActive]: active === item.label,

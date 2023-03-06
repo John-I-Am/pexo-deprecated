@@ -22,12 +22,14 @@ jobs:
         run: npm install && cd server && npm install && cd ../client && npm install
       - name: build
         run: npm run build:deploy    
-      # - uses: ikalnytskyi/action-setup-postgres@v4   
-      # - name: e2e tests
-      #   uses: cypress-io/github-action@v4
-      #   with:
-      #     start: npm run start:cypress:client, npm run start:cypress:server
-      #     wait-on: 'http://localhost:3000, http://localhost:3001'   <=== won't let me connect to servers??? manually test for now
+      - uses: ikalnytskyi/action-setup-postgres@v4 
+      - name: kill port
+        run: npx kill-port 3001 # temporary solution for strange address in use big 
+      - name: e2e tests
+        uses: cypress-io/github-action@v4
+        with:
+          start: npm run start:cypress:client, npm run start:cypress:server
+          wait-on: 'http://localhost:3000, http://localhost:3001'
       - uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
