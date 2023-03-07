@@ -160,10 +160,12 @@ const NavBar = forwardRef((props, refs): ReactElement => {
   return (
     <Navbar
       height="100%"
-      sx={{
+      sx={(theme) => ({
         width: expanded ? 300 : 100,
-      }}
-      display={expanded ? "block" : "none"}
+        [`@media (max-width: ${theme.breakpoints.sm})`]: {
+          display: expanded ? "flex" : "none",
+        },
+      })}
       p="md"
       className={classes.navbar}
     >

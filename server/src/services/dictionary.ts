@@ -1,28 +1,19 @@
-import config from "../utils/config";
-
-const define = async (word: any) => {
-  const response = await fetch(`https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/${word}?fields=definitions%2Cexamples%2Cpronunciations&strictMatch=false`, {
+const define = async (word: string): Promise<any> => {
+  const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      app_id: config.OXFORD_APP_ID as string,
-      app_key: config.OXFORD_APP_KEY as string,
     },
   });
-  return response.json();
+  try {
+    const result: any = await response.json();
+    const pronunciation: {audio: string | undefined} = result[0].phonetics[0].audio;
+    const { definition }: {definition: string | undefined} = result[0].meanings[0].definitions[0];
+    const { example }: {example: string | undefined} = result[0].meanings[0].definitions[0];
+    return { pronunciation, definition, example };
+  } catch {
+    return { error: "word not found" };
+  }
 };
 
-const define2 = async (word: any) => {
-  const response = await fetch(`https://od-api.oxforddictionaries.com/api/v2/sentences/en/${word}?strictMatch=false
-  `, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      app_id: config.OXFORD_APP_ID as string,
-      app_key: config.OXFORD_APP_KEY as string,
-    },
-  });
-  return response.json();
-};
-
-export default { define, define2 };
+export default { define };
