@@ -204,7 +204,6 @@ const CardEditor = ({ card }: Prop): ReactElement => {
               label="Dictionary Lookup"
               {...register("word", {
                 required: "required",
-                disabled: true,
               })}
             />
             <Error>
@@ -212,7 +211,7 @@ const CardEditor = ({ card }: Prop): ReactElement => {
             </Error>
           </InputContainer>
 
-          <Button compact type="submit" disabled>
+          <Button compact type="submit">
             Generate card
           </Button>
         </form>
