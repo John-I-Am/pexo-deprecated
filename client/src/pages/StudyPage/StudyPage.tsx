@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-vars */
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { Card } from "types";
 import {
   Stack, Image, Text, Container,
 } from "@mantine/core";
 import { useActiveDeck, useCardsDue } from "../../hooks/hooks";
-import CardComponent from "../../features/decks/Card/Card";
+import CardComponent from "../../features/decks/Card";
 import TagList from "../../components/TagList";
 import ProgressBar from "../../components/ProgressBar";
 import done from "../../assets/images/done.svg";
@@ -23,7 +22,7 @@ const Cardless = (): ReactElement => (
 const StudyPage = (): ReactElement => {
   const activeDeck = useActiveDeck();
   const cardsToStudy: Card[] = useCardsDue(activeDeck?.cards ?? []);
-  const [answerChecked, setAnswerChecked] = useState(false);
+
   const percentageDone
     : number = cardsToStudy.length === 0 || !activeDeck.cards || activeDeck.cards.length === 0
       ? 100
@@ -38,7 +37,7 @@ const StudyPage = (): ReactElement => {
       <TagList />
 
       {cardsToStudy.length !== 0
-        ? <CardComponent cardToStudy={cardsToStudy[0]} showNotes={setAnswerChecked} />
+        ? <CardComponent cardToStudy={cardsToStudy[0]} />
         : <Cardless />}
     </Stack>
   );

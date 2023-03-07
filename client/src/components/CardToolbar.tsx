@@ -12,13 +12,12 @@ import CardNote from "./CardNote";
 
 interface CardToolbarProps {
   card: Card;
-  handleIncorrect: Function;
-  handleCorrect: Function;
+  handleGuessed: Function;
   checked: boolean;
 }
 
 const CardToolbar = ({
-  card, handleIncorrect, handleCorrect, checked,
+  card, handleGuessed, checked,
 }: CardToolbarProps): ReactElement => {
   const audio = new Audio(card?.audio);
   const [opened, { open, close }] = useDisclosure(false);
@@ -42,8 +41,8 @@ const CardToolbar = ({
           {`Level: ${card.level}`}
         </Text>
         <Group sx={{ display: card.type !== "classic" ? "none" : "" }}>
-          <Button uppercase color="green" leftIcon={<IconCheck size="1rem" />} onClick={() => handleCorrect(true)}>correct</Button>
-          <Button uppercase color="red" leftIcon={<IconX size="1rem" />} onClick={() => handleIncorrect(false)}>incorrect</Button>
+          <Button uppercase color="green" leftIcon={<IconCheck size="1rem" />} onClick={() => handleGuessed(true)}>correct</Button>
+          <Button uppercase color="red" leftIcon={<IconX size="1rem" />} onClick={() => handleGuessed(false)}>incorrect</Button>
         </Group>
         <Group>
           <Container>
@@ -59,7 +58,7 @@ const CardToolbar = ({
           </Container>
 
           <Container display={checked ? "" : "none"}>
-            <Button rightIcon={<IconChevronRight size="1rem" />} onClick={() => handleCorrect(false)}>Next</Button>
+            <Button rightIcon={<IconChevronRight size="1rem" />} onClick={() => handleGuessed(false)}>Next</Button>
           </Container>
         </Group>
       </Group>
