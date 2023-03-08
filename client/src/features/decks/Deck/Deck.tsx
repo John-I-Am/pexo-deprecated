@@ -3,7 +3,7 @@ import { Button, Modal } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useState } from "react";
 import { useCreateCardMutation, useAddNewDeckMutation } from "../../api/apiSlice";
-import CardList from "../CardList/CardList";
+import CardTable from "../CardTable";
 import { Container } from "./styles";
 
 const Deck = ({ cards }: any) => {
@@ -44,12 +44,12 @@ const Deck = ({ cards }: any) => {
       </div>
 
       <Modal
-        size="auto"
+        size="xl"
         withCloseButton={false}
         opened={opened}
         onClose={() => setOpened(false)}
       >
-        <CardList cards={cards.cards} viewOnly />
+        <CardTable cards={cards.cards} viewOnly />
       </Modal>
     </Container>
   );
