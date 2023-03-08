@@ -1,6 +1,6 @@
 import { ReactElement, useState } from "react";
 import { Card } from "types";
-import CardList from "../../features/decks/CardList/CardList";
+import CardTable from "../../features/decks/CardTable";
 import DeckToolbar from "../../features/decks/DeckToolbar";
 import { useActiveDeck } from "../../hooks/hooks";
 import { Container } from "./styles";
@@ -19,7 +19,7 @@ const DeckEditorPage = (): ReactElement => {
   return (
     <Container>
       <DeckToolbar deck={activeDeck} searchCallback={setFilter} />
-      <CardList cards={cardsToShow} />
+      <CardTable cards={cardsToShow} viewOnly={false} />
     </Container>
   );
 };
