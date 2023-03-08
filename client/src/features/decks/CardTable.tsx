@@ -86,8 +86,8 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
             <tr key={card.id}>
               <td>
                 <Group position="left">
-                  <Box sx={{ display: viewOnly ? "none" : "" }}>
-                    <Menu openDelay={100} closeDelay={400}>
+                  <Box id="card-menu" sx={{ display: viewOnly ? "none" : "" }}>
+                    <Menu trigger="hover" openDelay={100} closeDelay={400}>
                       <Menu.Target>
                         <ActionIcon>
                           <IconDotsVertical />
@@ -95,6 +95,7 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
                       </Menu.Target>
                       <Menu.Dropdown>
                         <Menu.Item
+                          id="card-edit"
                           onClick={() => handleOpenEdit(card)}
                           icon={<IconEdit />}
                         >
@@ -102,6 +103,7 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
                         </Menu.Item>
 
                         <Menu.Item
+                          id="card-delete"
                           onClick={() => handleDeleteCard(card)}
                           color="red"
                           icon={<IconTrash />}

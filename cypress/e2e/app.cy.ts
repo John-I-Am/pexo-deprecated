@@ -67,7 +67,8 @@ describe("App", () => {
       cy.get("#nav_Editor").click();
       cy.contains("Decks").click();
       cy.contains("untitled").click();
-      cy.get("#edit").click();
+      cy.get("#card-menu").trigger("mouseover");
+      cy.get("#card-edit").click();
       cy.get("#input_front").type("edited front", { force: true });
       cy.get("#input_back").type("edited back", { force: true });
       cy.get("#create").click({ force: true });
