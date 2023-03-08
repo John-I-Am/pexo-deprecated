@@ -22,6 +22,7 @@ import DeckEditorPage from "./pages/DeckEditorPage/DeckEditorPage";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import StudyPage from "./pages/StudyPage/StudyPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import Error404 from "./components/Error404";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -49,7 +50,7 @@ root.render(
                 path="*"
                 element={(
                   <main style={{ padding: "1rem" }}>
-                    <p>There nothing here!</p>
+                    <Error404 />
                   </main>
             )}
               />
