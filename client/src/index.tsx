@@ -1,14 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
 
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, ColorSchemeProvider, ColorScheme } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
-import { themeDefault } from "./sharedStyles";
-
 import reportWebVitals from "./reportWebVitals";
 
 import HomePage from "./pages/HomePage/HomePage";
@@ -23,16 +21,28 @@ import AccountPage from "./pages/AccountPage/AccountPage";
 import StudyPage from "./pages/StudyPage/StudyPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Error404 from "./components/Error404";
+import { useAppSelector } from "./hooks/hooks";
+import { useGetUserQuery } from "./features/api/apiSlice";
+import { themeDefault } from "./sharedStyles";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
-);
-root.render(
-  <React.StrictMode>
-    <MantineProvider theme={themeDefault}>
-      <Notifications />
-      <ModalsProvider>
-        <Provider store={store}>
+const App = () => {
+  const userId = useAppSelector((state: any) => state.user.id);
+  const { data: currentUser = {} } = useGetUserQuery(userId);
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(currentUser.preferences?.colorScheme ?? "light");
+  const toggleColorScheme = (value?: ColorScheme) => setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  useEffect(() => {
+    if (currentUser.preferences?.colorScheme) {
+      setColorScheme(currentUser.preferences.colorScheme);
+    }
+  }, [currentUser]);
+  const theme: any = { ...themeDefault, colorScheme };
+
+  return (
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+        <Notifications />
+        <ModalsProvider>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<HomePage />} />
@@ -52,14 +62,24 @@ root.render(
                   <main style={{ padding: "1rem" }}>
                     <Error404 />
                   </main>
-            )}
+                  )}
               />
             </Routes>
           </BrowserRouter>
-        </Provider>
-      </ModalsProvider>
-    </MantineProvider>
+        </ModalsProvider>
+      </MantineProvider>
+    </ColorSchemeProvider>
+  );
+};
 
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement,
+);
+root.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
 );
 

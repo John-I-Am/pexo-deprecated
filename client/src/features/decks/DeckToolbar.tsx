@@ -58,7 +58,7 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
       <Modal opened={opened} onClose={close} size="xl" withCloseButton={false}>
         <CardEditor card={undefined} />
       </Modal>
-      <Group px="md" bg="white" position="apart">
+      <Group px="md" position="apart">
         <Stack spacing="xs">
           <form onSubmit={handleSubmit(handleChangeTitle)}>
             <Input

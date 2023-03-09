@@ -41,7 +41,7 @@ const getAllUsers = async (): Promise<User[]> => User.findAll({
 
 const updateUser = async (updatedUser: UpdatedUser, userId: number): Promise<User | null> => {
   const {
-    email, name, surname, currentPassword, newPassword,
+    email, name, surname, currentPassword, newPassword, preferences,
   } = updatedUser;
 
   const userToUpdate: User | null = await User.findByPk(userId);
@@ -49,6 +49,7 @@ const updateUser = async (updatedUser: UpdatedUser, userId: number): Promise<Use
   if (userToUpdate) {
     userToUpdate.set({
       ...userToUpdate,
+      preferences: preferences || userToUpdate.preferences,
       name: name || userToUpdate.name,
       surname: surname || userToUpdate.surname,
     });

@@ -12,6 +12,8 @@ import {
   Button,
   Stack,
   Group,
+  useMantineColorScheme,
+  ActionIcon,
   Container,
 } from "@mantine/core";
 import {
@@ -23,11 +25,15 @@ import {
   IconLogout,
   IconSwitchHorizontal,
   IconSearch,
+  IconSun,
+  IconMoon,
 } from "@tabler/icons-react";
 
 import SearchBar from "./SearchBar";
 
-import { apiSlice, useAddNewDeckMutation, useGetDecksQuery } from "../features/api/apiSlice";
+import {
+  apiSlice, useAddNewDeckMutation, useGetDecksQuery, useUpdateUserMutation,
+} from "../features/api/apiSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { setActive } from "../features/decks/decksSlice";
 import { clearUser } from "../features/users/usersSlice";
@@ -102,6 +108,8 @@ const navs = [
 ];
 
 const NavBar = forwardRef((props, refs): ReactElement => {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
   const { classes, cx } = useStyles();
   const [section, setSection] = useState<"navigate" | "decks">("navigate");
   const [expanded, setExpanded] = useState(true);
@@ -110,6 +118,8 @@ const NavBar = forwardRef((props, refs): ReactElement => {
   const [addNewDeck] = useAddNewDeckMutation();
   const activeDeckId = useAppSelector((state) => state.decks.activeDeckId);
   const { data: decks = [] } = useGetDecksQuery();
+  const [updateUser] = useUpdateUserMutation();
+  const userId = useAppSelector((state: any) => state.user.id);
 
   useImperativeHandle(refs, () => ({
     toggleExpanded: () => setExpanded(!expanded),
@@ -118,6 +128,11 @@ const NavBar = forwardRef((props, refs): ReactElement => {
   const handleLogout = (): void => {
     dispatch(clearUser());
     dispatch(apiSlice.util.resetApiState());
+  };
+
+  const handleToggleColorScheme = async () => {
+    toggleColorScheme();
+    await updateUser({ id: userId, preferences: { colorScheme: dark ? "light" : "dark" } });
   };
 
   const [filter, setFilter] = useState<string>("");
@@ -210,6 +225,14 @@ const NavBar = forwardRef((props, refs): ReactElement => {
       </Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
+        <ActionIcon
+          variant="outline"
+          color={dark ? "yellow" : "blue"}
+          onClick={() => handleToggleColorScheme()}
+          title="Toggle color scheme"
+        >
+          {dark ? <IconSun size="1.1rem" /> : <IconMoon size="1.1rem" />}
+        </ActionIcon>
         <Container
           className={cx(classes.link, { [classes.linkCompact]: !expanded })}
           onClick={() => setExpanded(!expanded)}

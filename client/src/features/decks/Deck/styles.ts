@@ -11,8 +11,6 @@ export const Container: any = styled.div`
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 300px;
-  height: 200px;
   box-shadow: ${SHADOW};
   border-radius: ${spacing.default};
   padding: ${spacing.default};

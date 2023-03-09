@@ -128,6 +128,9 @@ describe("what happens when there is initally one user", () => {
         name: "rootname",
         surname: "rootsurname",
         email: "root@root.com",
+        preferences: {
+          colorScheme: "light",
+        },
         createdAt: createdUser.createdAt.toJSON(),
         updatedAt: (createdUser.updatedAt).toJSON(),
       });
@@ -140,6 +143,9 @@ describe("what happens when there is initally one user", () => {
         name: "newName",
         surname: "nameSurname",
         email: "newemail@root.com",
+        preferences: {
+          colorScheme: "dark",
+        },
         newPassword: "rootchanged",
         currentPassword: "root",
       };
@@ -158,6 +164,9 @@ describe("what happens when there is initally one user", () => {
         name: "newName",
         surname: "nameSurname",
         email: "newemail@root.com",
+        preferences: {
+          colorScheme: "dark",
+        },
         createdAt: createdUser.createdAt.toJSON(),
         updatedAt: (response.body.updatedAt),
       });
@@ -303,15 +312,15 @@ describe("what happens when there is initally one user", () => {
         expect(contents).toContainEqual("this is front of card");
       });
 
-      // test("All cards can be returned", async () => {
-      //   const cardsAtStart = await helper.cardsInDb();
+      test("All cards can be returned", async () => {
+        const cardsAtStart = await helper.cardsInDb();
 
-      //   const response = await api
-      //     .get("/api/cards")
-      //     .set("Authorization", `bearer ${token}`);
+        const response = await api
+          .get("/api/cards")
+          .set("Authorization", `bearer ${token}`);
 
-      //   expect(response.body).toHaveLength(cardsAtStart.length);
-      // });
+        expect(response.body).toHaveLength(cardsAtStart.length);
+      });
 
       test("Specific card can be returned", async () => {
         const cardsAtStart = await helper.cardsInDb();

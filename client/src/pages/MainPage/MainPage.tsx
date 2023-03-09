@@ -1,12 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { ReactElement, useRef, useState } from "react";
-import { Burger, createStyles } from "@mantine/core";
+import { Burger, createStyles, Group } from "@mantine/core";
 
 import { setUser } from "../../features/users/usersSlice";
 import { useAppDispatch } from "../../hooks/hooks";
 
 import NavBar from "../../components/NavBar";
-import { Container } from "./styles";
 
 const useStyles = createStyles((theme) => ({
   burger: {
@@ -44,11 +43,15 @@ const MainPage = (): ReactElement => {
   };
 
   return (
-    <Container>
+    <Group
+      align="apart"
+      noWrap
+      sx={{ height: "100vh" }}
+    >
       <NavBar ref={navBarRef} />
       <Burger className={classes.burger} opened={open} onClick={handleOpen} />
       <Outlet />
-    </Container>
+    </Group>
   );
 };
 

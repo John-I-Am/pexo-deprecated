@@ -15,6 +15,10 @@ export interface UserCredentials {
   password: string
 }
 
+export interface UserPreferences {
+  colorScheme: "light" | "dark"
+}
+
 export interface NewUser {
   email: string,
   name: string,
@@ -61,6 +65,7 @@ export interface CombinedDeck {
 }
 
 export interface UpdatedUser {
+  preferences: UserPreferences | undefined,
   email: string | undefined,
   name: string | undefined,
   surname: string | undefined,

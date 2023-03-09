@@ -13,7 +13,6 @@ const useStyles = createStyles((theme) => ({
   table: {
     display: "block",
     overflow: "auto",
-    background: "white",
     paddingLeft: theme.spacing.lg,
 
     td: {
@@ -23,7 +22,6 @@ const useStyles = createStyles((theme) => ({
   },
 
   head: {
-    background: "white",
     width: "25vw",
     minWidth: "300px",
     position: "sticky",

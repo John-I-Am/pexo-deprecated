@@ -13,6 +13,8 @@ class User extends Model <InferAttributes<User>, InferCreationAttributes<User>> 
 
   declare disabled: CreationOptional<boolean>;
 
+  declare preferences: CreationOptional<object>;
+
   declare email: string;
 
   declare name: string;
@@ -35,6 +37,12 @@ User.init({
   disabled: {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
+  },
+  preferences: {
+    type: DataTypes.JSON,
+    defaultValue: {
+      colorScheme: "light",
+    },
   },
   email: {
     type: DataTypes.STRING,

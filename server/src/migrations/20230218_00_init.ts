@@ -84,6 +84,10 @@ export = {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      preferences: {
+        type: DataTypes.JSON,
+        defaultValue: { colorScheme: "light" },
+      },
       email: {
         type: DataTypes.STRING,
         unique: true,
