@@ -3,11 +3,11 @@ import { Card } from "types";
 import {
   Stack, Image, Text, Container,
 } from "@mantine/core";
-import { useActiveDeck, useCardsDue } from "../../hooks/hooks";
-import CardComponent from "../../features/decks/Card";
-import TagList from "../../components/TagList";
-import ProgressBar from "../../components/ProgressBar";
-import done from "../../assets/images/done.svg";
+import { useActiveDeck, useCardsDue } from "../hooks/hooks";
+import CardComponent from "../features/decks/Card";
+import TagList from "../components/TagList";
+import ProgressBar from "../components/ProgressBar";
+import done from "../assets/images/done.svg";
 
 const Cardless = (): ReactElement => (
   <Stack align="center" sx={{ width: "100%" }}>

@@ -1,9 +1,9 @@
+import { Stack } from "@mantine/core";
 import { ReactElement, useState } from "react";
 import { Card } from "types";
-import CardTable from "../../features/decks/CardTable";
-import DeckToolbar from "../../features/decks/DeckToolbar";
-import { useActiveDeck } from "../../hooks/hooks";
-import { Container } from "./styles";
+import CardTable from "../features/decks/CardTable";
+import DeckToolbar from "../features/decks/DeckToolbar";
+import { useActiveDeck } from "../hooks/hooks";
 
 const DeckEditorPage = (): ReactElement => {
   const activeDeck = useActiveDeck();
@@ -17,10 +17,10 @@ const DeckEditorPage = (): ReactElement => {
     ) ?? [];
 
   return (
-    <Container>
+    <Stack sx={{ height: "100%" }}>
       <DeckToolbar deck={activeDeck} searchCallback={setFilter} />
       <CardTable cards={cardsToShow} viewOnly={false} />
-    </Container>
+    </Stack>
   );
 };
 export default DeckEditorPage;

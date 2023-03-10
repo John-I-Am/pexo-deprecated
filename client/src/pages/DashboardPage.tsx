@@ -1,7 +1,6 @@
 import { ReactElement, useEffect } from "react";
-import { useAppDispatch } from "../../hooks/hooks";
-import { setUser } from "../../features/users/usersSlice";
-import { Container } from "./styles";
+import { useAppDispatch } from "../hooks/hooks";
+import { setUser } from "../features/users/usersSlice";
 
 const DashboardPage = (): ReactElement => {
   const dispatch = useAppDispatch();
@@ -14,9 +13,9 @@ const DashboardPage = (): ReactElement => {
   }, []);
 
   return (
-    <Container>
+    <div>
       <p>under construction</p>
-    </Container>
+    </div>
   );
 };
 

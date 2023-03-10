@@ -15,6 +15,13 @@ const useStyles = createStyles((theme) => ({
     overflow: "auto",
     paddingLeft: theme.spacing.lg,
 
+    thead: {
+      position: "sticky",
+      top: 0,
+      zIndex: 2,
+      background: theme.colorScheme === "dark" ? theme.colors.dark[8] : "white",
+    },
+
     td: {
       maxWidth: "300px",
       overflowWrap: "break-word",
@@ -24,8 +31,6 @@ const useStyles = createStyles((theme) => ({
   head: {
     width: "25vw",
     minWidth: "300px",
-    position: "sticky",
-    top: 0,
   },
 
   menu: {

@@ -2,10 +2,10 @@ import { Outlet } from "react-router-dom";
 import { ReactElement, useState } from "react";
 import { Box, Burger, Group } from "@mantine/core";
 
-import { setUser } from "../../features/users/usersSlice";
-import { useAppDispatch } from "../../hooks/hooks";
+import { setUser } from "../features/users/usersSlice";
+import { useAppDispatch } from "../hooks/hooks";
 
-import NavBar from "../../components/NavBar";
+import NavBar from "../components/NavBar";
 
 interface localStorage {
   token: string

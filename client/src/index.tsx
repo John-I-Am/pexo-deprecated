@@ -9,16 +9,16 @@ import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import reportWebVitals from "./reportWebVitals";
 
-import HomePage from "./pages/HomePage/HomePage";
+import HomePage from "./pages/HomePage";
 import SignupPage from "./pages/SignupPage/SignupPage";
-import MainPage from "./pages/MainPage/MainPage";
-import DashboardPage from "./pages/DashboardPage/DashboardPage";
-import DiscoverPage from "./pages/DiscoverPage/DiscoverPage";
+import MainPage from "./pages/MainPage";
+import DashboardPage from "./pages/DashboardPage";
+import DiscoverPage from "./pages/DiscoverPage";
 
 import store from "./store";
-import DeckEditorPage from "./pages/DeckEditorPage/DeckEditorPage";
+import DeckEditorPage from "./pages/DeckEditorPage";
 import AccountPage from "./pages/AccountPage/AccountPage";
-import StudyPage from "./pages/StudyPage/StudyPage";
+import StudyPage from "./pages/StudyPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Error404 from "./components/Error404";
 import { useAppSelector } from "./hooks/hooks";
