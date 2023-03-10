@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement, useState } from "react";
+import SearchBar from "../../components/SearchBar";
 import Deck from "../../features/decks/Deck/Deck";
 import { useAppDispatch } from "../../hooks/hooks";
 import { alphabetCards, monthCards } from "../../utils/demoCards";
@@ -12,6 +13,7 @@ const DiscoverPage = (): ReactElement => {
 
   return (
     <Container>
+      <SearchBar />
       <DeckList>
         <Deck cards={alphabetCards} />
         <Deck cards={monthCards} />

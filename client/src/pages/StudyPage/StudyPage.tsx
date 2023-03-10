@@ -29,7 +29,7 @@ const StudyPage = (): ReactElement => {
       : (((activeDeck.cards.length - cardsToStudy.length) / activeDeck.cards.length) * 100);
 
   return (
-    <Stack align="center" justify="space-between" sx={{ width: "100%" }}>
+    <Stack align="center" justify="space-between" sx={{ height: "100%" }}>
       <ProgressBar
         value={percentageDone}
         label={`${Math.round(percentageDone)}% (${cardsToStudy.length} / ${activeDeck?.cards?.length})`}

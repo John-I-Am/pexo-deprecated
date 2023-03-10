@@ -1,7 +1,6 @@
-import {
-  forwardRef, ReactElement, useImperativeHandle, useState,
-} from "react";
+import { ReactElement, useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   Navbar,
   SegmentedControl,
@@ -12,9 +11,8 @@ import {
   Button,
   Stack,
   Group,
-  useMantineColorScheme,
-  ActionIcon,
   Container,
+  Text,
 } from "@mantine/core";
 import {
   IconLicense,
@@ -25,29 +23,20 @@ import {
   IconLogout,
   IconSwitchHorizontal,
   IconSearch,
-  IconSun,
-  IconMoon,
 } from "@tabler/icons-react";
 
+import { Deck } from "types";
 import SearchBar from "./SearchBar";
+import ThemeToggle from "./ThemeToggle";
 
 import {
-  apiSlice, useAddNewDeckMutation, useGetDecksQuery, useUpdateUserMutation,
+  apiSlice, useAddNewDeckMutation, useGetDecksQuery,
 } from "../features/api/apiSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { setActive } from "../features/decks/decksSlice";
 import { clearUser } from "../features/users/usersSlice";
 
 const useStyles = createStyles((theme) => ({
-  navbar: {
-    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
-    transition: "width .2s",
-  },
-
-  scrollSection: {
-    overflow: "scroll",
-  },
-
   link: {
     ...theme.fn.focusStyles(),
     display: "flex",
@@ -58,6 +47,7 @@ const useStyles = createStyles((theme) => ({
     padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
     borderRadius: theme.radius.sm,
     fontWeight: 500,
+    width: "100%",
 
     "&:hover": {
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
@@ -92,6 +82,9 @@ const useStyles = createStyles((theme) => ({
   },
 
   footer: {
+    display: "flex",
+    flexDirection: "column",
+    gap: theme.spacing.xs,
     borderTop: `${rem(1)} solid ${
       theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
     }`,
@@ -107,46 +100,52 @@ const navs = [
   { link: "/main/account", label: "Account", icon: IconUsers },
 ];
 
-const NavBar = forwardRef((props, refs): ReactElement => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const dark = colorScheme === "dark";
+interface NavBarProps {
+  opened: boolean;
+  handleOpen: Function;
+}
+
+const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   const { classes, cx } = useStyles();
   const [section, setSection] = useState<"navigate" | "decks">("navigate");
-  const [expanded, setExpanded] = useState(true);
   const [active, setActiveLink] = useState("Study");
   const dispatch = useAppDispatch();
   const [addNewDeck] = useAddNewDeckMutation();
   const activeDeckId = useAppSelector((state) => state.decks.activeDeckId);
   const { data: decks = [] } = useGetDecksQuery();
-  const [updateUser] = useUpdateUserMutation();
-  const userId = useAppSelector((state: any) => state.user.id);
-
-  useImperativeHandle(refs, () => ({
-    toggleExpanded: () => setExpanded(!expanded),
-  }));
 
   const handleLogout = (): void => {
     dispatch(clearUser());
     dispatch(apiSlice.util.resetApiState());
   };
 
-  const handleToggleColorScheme = async () => {
-    toggleColorScheme();
-    await updateUser({ id: userId, preferences: { colorScheme: dark ? "light" : "dark" } });
-  };
-
   const [filter, setFilter] = useState<string>("");
-  const decksToShow: any = filter === ""
+  const decksToShow: Deck[] = filter === ""
     ? decks
-    : decks.filter((deck: any) => (deck.title).toLowerCase().includes(filter.toLowerCase()));
+    : decks.filter((deck: Deck) => (deck.title).toLowerCase().includes(filter.toLowerCase()));
 
-  const deckList = decksToShow.map((deck: any) => (
-    <Tooltip disabled={expanded} label={deck.title} position="right" withArrow offset={20}>
+  const deckList = decksToShow.map((deck: Deck) => (
+    <Tooltip
+      key={deck.id}
+      multiline
+      width={120}
+      label={(
+        <>
+          <Text>{deck.title}</Text>
+          <Text>{`${"---"}`}</Text>
+          <Text>
+            {`Total cards: ${deck.cards?.length ?? 0}`}
+          </Text>
+        </>
+      )}
+      position="right"
+      withArrow
+      offset={20}
+    >
       <Button
         className={cx({ [classes.linkActive]: deck.id === activeDeckId || activeDeckId === null })}
         variant="outline"
         key={deck.id}
-        fullWidth
         onClick={() => dispatch(setActive(deck.id as any) as any)}
       >
         <p>{deck.title}</p>
@@ -158,14 +157,14 @@ const NavBar = forwardRef((props, refs): ReactElement => {
     <Link
       id={`nav_${item.label}`}
       className={cx(classes.link, {
-        [classes.linkCompact]: !expanded,
+        [classes.linkCompact]: !opened,
         [classes.linkActive]: active === item.label,
       })}
       to={item.link}
-      key={Math.random()}
+      key={item.label}
       onClick={() => setActiveLink(item.label)}
     >
-      <Tooltip disabled={expanded} label={item.label} position="right" withArrow offset={20}>
+      <Tooltip disabled={opened} label={item.label} position="right" withArrow offset={20}>
         <item.icon className={classes.linkIcon} stroke={1.5} />
       </Tooltip>
       <span>{item.label}</span>
@@ -176,17 +175,18 @@ const NavBar = forwardRef((props, refs): ReactElement => {
     <Navbar
       height="100%"
       sx={(theme) => ({
-        width: expanded ? 300 : 100,
+        width: opened ? 300 : 100,
+        transition: "width .2s",
+
         [`@media (max-width: ${theme.breakpoints.sm})`]: {
-          display: expanded ? "flex" : "none",
+          display: opened ? "flex" : "none",
         },
       })}
       p="md"
-      className={classes.navbar}
     >
       <Navbar.Section>
         <SegmentedControl
-          display={expanded ? "" : "none"}
+          sx={{ visibility: opened ? "visible" : "hidden" }}
           value={section}
           onChange={(value: "navigate" | "decks") => setSection(value)}
           transitionTimingFunction="ease"
@@ -198,26 +198,26 @@ const NavBar = forwardRef((props, refs): ReactElement => {
         />
       </Navbar.Section>
 
-      <Navbar.Section grow mt="xl" className={classes.scrollSection}>
+      <Navbar.Section grow mt="xl" sx={{ overflow: "scroll" }}>
         {section === "navigate"
           ? links
           : (
             <Stack>
               <Stack>
                 <Group>
-                  <Tooltip disabled={expanded} label="Create" position="right" withArrow offset={20}>
+                  <Tooltip disabled={opened} label="Create" position="right" withArrow offset={20}>
                     <Button onClick={() => addNewDeck()} leftIcon={<IconPlus />}>
-                      {expanded ? "Create" : ""}
+                      {opened ? "Create" : ""}
                     </Button>
                   </Tooltip>
-                  <Tooltip disabled={expanded} label="All" position="right" withArrow offset={20}>
+                  <Tooltip disabled={opened} label="All" position="right" withArrow offset={20}>
                     <Button onClick={() => dispatch(setActive(null))} leftIcon={<IconKey />}>
-                      {expanded ? "All" : ""}
+                      {opened ? "All" : ""}
                     </Button>
                   </Tooltip>
                 </Group>
 
-                <SearchBar display={expanded ? "" : "none"} callback={setFilter} />
+                <SearchBar display={opened ? "" : "none"} callback={setFilter} />
               </Stack>
               {deckList}
             </Stack>
@@ -225,32 +225,26 @@ const NavBar = forwardRef((props, refs): ReactElement => {
       </Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
-        <ActionIcon
-          variant="outline"
-          color={dark ? "yellow" : "blue"}
-          onClick={() => handleToggleColorScheme()}
-          title="Toggle color scheme"
-        >
-          {dark ? <IconSun size="1.1rem" /> : <IconMoon size="1.1rem" />}
-        </ActionIcon>
+        <ThemeToggle />
+
         <Container
-          className={cx(classes.link, { [classes.linkCompact]: !expanded })}
-          onClick={() => setExpanded(!expanded)}
+          className={cx(classes.link, { [classes.linkCompact]: !opened })}
+          onClick={() => handleOpen(!opened)}
         >
-          <Tooltip disabled={expanded} label="Expand" position="right" withArrow offset={20}>
+          <Tooltip disabled={opened} label="Expand" position="right" withArrow offset={20}>
             <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
           </Tooltip>
-          <span>Expand</span>
+          <span>Hide</span>
         </Container>
 
         <Link
           className={cx(classes.link, {
-            [classes.linkCompact]: !expanded,
+            [classes.linkCompact]: !opened,
           })}
           to="/"
           onClick={handleLogout}
         >
-          <Tooltip disabled={expanded} label="Logout" position="right" withArrow offset={20}>
+          <Tooltip disabled={opened} label="Logout" position="right" withArrow offset={20}>
             <IconLogout className={classes.linkIcon} stroke={1.5} />
           </Tooltip>
           <span>Logout</span>
@@ -258,6 +252,6 @@ const NavBar = forwardRef((props, refs): ReactElement => {
       </Navbar.Section>
     </Navbar>
   );
-});
+};
 
 export default NavBar;
