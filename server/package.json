@@ -27,7 +27,10 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.9.0",
     "sequelize": "^6.28.0",
+    "ts-node": "^10.9.1",
     "umzug": "^3.2.1"
   },
-  "cacheDirectories": ["server/node_modules"]
+  "cacheDirectories": [
+    "server/node_modules"
+  ]
 }
