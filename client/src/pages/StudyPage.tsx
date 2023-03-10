@@ -10,7 +10,7 @@ import ProgressBar from "../components/ProgressBar";
 import done from "../assets/images/done.svg";
 
 const Cardless = (): ReactElement => (
-  <Stack align="center" sx={{ width: "100%" }}>
+  <Stack align="center" sx={{ width: "80%" }}>
     <Image width="80%" src={done} alt="empty deck" />
     <Container pb="xl">
       <Text fw={700} fs="italic">All Done :)</Text>

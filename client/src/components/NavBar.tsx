@@ -1,5 +1,5 @@
 import { ReactElement, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import {
   Navbar,
@@ -108,7 +108,6 @@ interface NavBarProps {
 const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   const { classes, cx } = useStyles();
   const [section, setSection] = useState<"navigate" | "decks">("navigate");
-  const [active, setActiveLink] = useState("Study");
   const dispatch = useAppDispatch();
   const [addNewDeck] = useAddNewDeckMutation();
   const activeDeckId = useAppSelector((state) => state.decks.activeDeckId);
@@ -154,21 +153,19 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   ));
 
   const links = navs.map((item) => (
-    <Link
+    <NavLink
       id={`nav_${item.label}`}
-      className={cx(classes.link, {
-        [classes.linkCompact]: !opened,
-        [classes.linkActive]: active === item.label,
-      })}
+      className={({ isActive }) => (isActive
+        ? cx(classes.link, classes.linkActive, { [classes.linkCompact]: !opened })
+        : cx(classes.link, { [classes.linkCompact]: !opened }))}
       to={item.link}
       key={item.label}
-      onClick={() => setActiveLink(item.label)}
     >
       <Tooltip disabled={opened} label={item.label} position="right" withArrow offset={20}>
         <item.icon className={classes.linkIcon} stroke={1.5} />
       </Tooltip>
       <span>{item.label}</span>
-    </Link>
+    </NavLink>
   ));
 
   return (
@@ -228,7 +225,9 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
         <ThemeToggle />
 
         <Container
-          className={cx(classes.link, { [classes.linkCompact]: !opened })}
+          className={cx(classes.link, {
+            [classes.linkCompact]: !opened,
+          })}
           onClick={() => handleOpen(!opened)}
         >
           <Tooltip disabled={opened} label="Expand" position="right" withArrow offset={20}>
@@ -237,7 +236,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
           <span>Hide</span>
         </Container>
 
-        <Link
+        <NavLink
           className={cx(classes.link, {
             [classes.linkCompact]: !opened,
           })}
@@ -248,7 +247,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
             <IconLogout className={classes.linkIcon} stroke={1.5} />
           </Tooltip>
           <span>Logout</span>
-        </Link>
+        </NavLink>
       </Navbar.Section>
     </Navbar>
   );

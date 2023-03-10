@@ -28,13 +28,16 @@ const CardToolbar = ({
         <CardNote notes={card?.examples} />
       </Modal>
       <Group
+        noWrap
         position="apart"
         sx={(theme: any) => ({
           backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.blue[9],
           width: "100%",
           padding: "0 16px 0 16px",
           borderRadius: theme.radius.md,
-          overflow: "scroll",
+
+          [`@media (max-width: ${theme.breakpoints.sm})`]: {
+          },
         })}
       >
         <Text fw={700}>

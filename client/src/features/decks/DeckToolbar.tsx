@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement } from "react";
 import {
-  Modal, ActionIcon, Text, Group, Input, Stack,
+  Modal, ActionIcon, Text, Group, Input,
 } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
@@ -58,8 +58,10 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
       <Modal opened={opened} onClose={close} size="xl" withCloseButton={false}>
         <CardEditor card={undefined} />
       </Modal>
-      <Group px="md" position="apart">
-        <Stack spacing="xs">
+      <Group p="md" position="apart">
+        <Group spacing="xs" align="start">
+          <SearchBar callback={searchCallback} />
+
           <form onSubmit={handleSubmit(handleChangeTitle)}>
             <Input
               {...register("title", {
@@ -77,12 +79,8 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
           <Text c="red" fz="sm" role="alert">
             {errors.title && errors.title.message}
           </Text>
-          <Text c="red" fz="sm" role="alert">
-            {errors.title && errors.title.type}
-          </Text>
-        </Stack>
+        </Group>
 
-        <SearchBar callback={searchCallback} />
         <Group>
           <Group>
             <ActionIcon id="add_card" size="xl" disabled={!deck?.id} onClick={() => open()}><IconPlus /></ActionIcon>
