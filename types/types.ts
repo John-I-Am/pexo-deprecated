@@ -55,6 +55,7 @@ export interface Deck {
   userId: number,
   id: number
   title: string,
+  description: string | undefined,
   creationDate: Date,
   cards: Array<Card> | undefined,
 }

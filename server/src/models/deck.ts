@@ -12,6 +12,8 @@ class Deck extends Model<InferAttributes<Deck>, InferCreationAttributes<Deck>> {
   declare userId: ForeignKey<number>;
 
   declare title: CreationOptional<string>;
+
+  declare description: CreationOptional<string>;
 }
 
 Deck.init({
@@ -24,6 +26,9 @@ Deck.init({
     type: DataTypes.STRING,
     defaultValue: "untitled",
     allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
   },
 }, {
   sequelize,

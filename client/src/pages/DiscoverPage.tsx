@@ -3,7 +3,7 @@
 import { Group, Stack } from "@mantine/core";
 import { ReactElement, useState } from "react";
 import SearchBar from "../components/SearchBar";
-import Deck from "../features/decks/Deck/Deck";
+import DeckInfo from "../features/decks/Deck";
 import { useAppDispatch } from "../hooks/hooks";
 import { alphabetCards, monthCards } from "../utils/demoCards";
 
@@ -15,8 +15,8 @@ const DiscoverPage = (): ReactElement => {
     <Stack>
       <SearchBar />
       <Group>
-        <Deck cards={alphabetCards} />
-        <Deck cards={monthCards} />
+        <DeckInfo deck={alphabetCards} />
+        <DeckInfo deck={monthCards} />
       </Group>
     </Stack>
   );

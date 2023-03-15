@@ -16,10 +16,15 @@ const getAllDecks = async (userId: number): Promise<Deck[]> => {
   return decks;
 };
 
-const updateDeck = async (updatedTitle: string, deckId: number): Promise<Deck | null> => {
+const updateDeck = async (
+  updatedTitle: string,
+  updatedDescription: string,
+  deckId: number,
+): Promise<Deck | null> => {
   const deck: Deck | null = await Deck.findByPk(deckId);
   if (deck) {
     deck.title = updatedTitle;
+    deck.description = updatedDescription || deck.description;
     await deck.save();
   }
   return deck;

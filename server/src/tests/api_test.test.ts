@@ -252,15 +252,20 @@ describe("what happens when there is initally one user", () => {
         expect(response.body).toHaveLength(decksAtStart.length);
       });
 
-      test("Deck title can be edited", async () => {
+      test("Deck can be edited", async () => {
         const decksAtStart = await helper.decksInDb();
         const deckToEdit = decksAtStart[0];
 
-        await api
+        const response = await api
           .put(`/api/decks/${deckToEdit.id}`)
           .set("Authorization", `bearer ${token}`)
-          .send({ title: "new Title" })
+          .send({ title: "new Title", description: "New Deck" })
           .expect(200);
+
+        expect(response.body).toMatchObject({
+          title: "new Title",
+          description: "New Deck",
+        });
 
         const decksAtEnd = await helper.decksInDb();
         const deckTitlesAtEnd = decksAtEnd.map((deck) => deck.title);

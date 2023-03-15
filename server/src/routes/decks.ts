@@ -18,6 +18,7 @@ decksRouter.get("/", middleware.tokenExtractor, async (request: Request, respons
 decksRouter.put("/:id", middleware.tokenExtractor, async (request: Request, response: Response): Promise<void> => {
   const updatedDeck: Deck | null = await decksService.updateDeck(
     request.body.title,
+    request.body.description,
     +request.params.id,
   );
 
