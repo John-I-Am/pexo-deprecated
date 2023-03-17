@@ -9,7 +9,7 @@ import { IconPlus, IconTrash, IconEdit } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { Deck } from "types";
 import { useAppDispatch } from "../../hooks/hooks";
-import CardEditor from "./CardEditor/CardEditor";
+import CardEditor from "./CardEditor";
 import { useDeleteDeckMutation, useUpdateDeckMutation } from "../api/apiSlice";
 import { setActive } from "./decksSlice";
 import SearchBar from "../../components/SearchBar";
@@ -55,7 +55,13 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
 
   return (
     <>
-      <Modal opened={opened} onClose={close} size="xl" withCloseButton={false}>
+      <Modal
+        zIndex={2000}
+        opened={opened}
+        onClose={close}
+        size="xl"
+        withCloseButton={false}
+      >
         <CardEditor card={undefined} />
       </Modal>
       <Group p="md" position="apart">

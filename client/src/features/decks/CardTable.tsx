@@ -6,7 +6,7 @@ import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import { Card } from "types";
 import { IconDotsVertical, IconTrash, IconEdit } from "@tabler/icons-react";
-import CardEditor from "./CardEditor/CardEditor";
+import CardEditor from "./CardEditor";
 import { useDeleteCardMutation } from "../api/apiSlice";
 
 const useStyles = createStyles((theme) => ({
@@ -137,6 +137,7 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
         </tbody>
       </Table>
       <Modal
+        zIndex={2000}
         size="xl"
         withCloseButton={false}
         opened={opened}
