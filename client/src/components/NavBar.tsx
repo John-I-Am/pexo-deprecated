@@ -170,6 +170,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
 
   return (
     <Navbar
+      id="nav_bar"
       height="100%"
       sx={(theme) => ({
         width: opened ? 300 : 100,
@@ -183,6 +184,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
     >
       <Navbar.Section>
         <SegmentedControl
+          id="nav_segment"
           sx={{ visibility: opened ? "visible" : "hidden" }}
           value={section}
           onChange={(value: "navigate" | "decks") => setSection(value)}
@@ -225,6 +227,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
         <ThemeToggle />
 
         <Container
+          id="nav_expand"
           className={cx(classes.link, {
             [classes.linkCompact]: !opened,
           })}

@@ -62,9 +62,9 @@ export const apiSlice: any = createApi({
     }),
     updateDeck: builder.mutation({
       query: (updatedDeck) => ({
-        url: `/decks/${updatedDeck.activeDeckId}`,
+        url: `/decks/${updatedDeck.id}`,
         method: "PUT",
-        body: updatedDeck.title,
+        body: updatedDeck,
       }),
       providesTags: ["Deck"] as any,
       invalidatesTags: ["Deck"],

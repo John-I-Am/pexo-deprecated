@@ -1,13 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import {
-  Modal, ActionIcon, Text, Group, Input,
+  Modal, ActionIcon, Text, Group, Input, Textarea, Stack, Button,
 } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useClickOutside } from "@mantine/hooks";
 import { IconPlus, IconTrash, IconEdit } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
-import { Deck } from "types";
+// import { Deck } from "types";
 import { useAppDispatch } from "../../hooks/hooks";
 import CardEditor from "./CardEditor";
 import { useDeleteDeckMutation, useUpdateDeckMutation } from "../api/apiSlice";
@@ -16,14 +16,16 @@ import SearchBar from "../../components/SearchBar";
 
 interface FormValues {
   title: string;
+  description: string;
 }
 
-const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Function})
-  : ReactElement => {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [deleteDeck] = useDeleteDeckMutation();
-  const [updateDeck] = useUpdateDeckMutation();
+// deck: Deck returns error: description not in type Deck
+const DeckToolbar = ({ deck, searchCallback }: any): ReactElement => {
   const dispatch = useAppDispatch();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [isEditable, setIsEditable] = useState<boolean>(false);
+  const [deleteDeck] = useDeleteDeckMutation();
+  const [updateDeck, { isLoading: isLoadingUpdate }] = useUpdateDeckMutation();
 
   const {
     register,
@@ -32,9 +34,28 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
     setValue,
   } = useForm<FormValues>();
 
-  const handleChangeTitle = async (data: {title: string}): Promise<void> => {
-    await updateDeck({ activeDeckId: deck.id, title: data });
-    setValue("title", data.title);
+  const resetFormState = () => {
+    setValue("title", deck.title);
+    setValue("description", deck.description as string);
+  };
+
+  const ref = useClickOutside(() => {
+    setIsEditable(false);
+    resetFormState();
+  });
+
+  useEffect(() => {
+    setValue("title", deck.title);
+    setValue("description", deck.description as string);
+  }, [deck]);
+
+  const handleChangeDeckInfo = async ({ title, description }: FormValues): Promise<void> => {
+    await updateDeck({
+      ...deck,
+      title,
+      description: description || " ", // TODO: not optional, need to alter backend to allow empty string
+    });
+    setIsEditable(false);
   };
 
   const handleDeleteDeck = (): void => {
@@ -65,11 +86,14 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
         <CardEditor card={undefined} />
       </Modal>
       <Group p="md" position="apart">
-        <Group spacing="xs" align="start">
-          <SearchBar callback={searchCallback} />
-
-          <form onSubmit={handleSubmit(handleChangeTitle)}>
+        <Stack>
+          <form ref={ref} onSubmit={handleSubmit(handleChangeDeckInfo)}>
             <Input
+              styles={{ input: { fontSize: "2rem" } }}
+              readOnly={!isEditable}
+              variant={isEditable ? "default" : "unstyled"}
+              error={errors.title?.message}
+              disabled={!deck?.id}
               {...register("title", {
                 required: true,
                 pattern: {
@@ -77,15 +101,40 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
                   message: "length exceeded / invalid characters",
                 },
               })}
-              disabled={!deck?.id}
-              placeholder={deck?.title}
-              icon={<IconEdit />}
             />
+
+            <Textarea
+              styles={(theme) => ({ input: { color: theme.colors.gray[6] } })}
+              autosize
+              readOnly={!isEditable}
+              placeholder="description.."
+              variant={isEditable ? "default" : "unstyled"}
+              defaultValue={deck?.description ?? ""}
+              error={errors.description?.message}
+              {...register("description", {
+                pattern: {
+                  value: /^[a-zA-Z0-9_ ]{0,120}$/i,
+                  message: "length exceeded / invalid characters",
+                },
+              })}
+            />
+
+            <Group position="apart">
+              <ActionIcon
+                disabled={!deck?.id}
+                onClick={() => {
+                  setIsEditable(!isEditable);
+                  resetFormState();
+                }}
+              >
+                <IconEdit size="1rem" />
+              </ActionIcon>
+              <Button loading={isLoadingUpdate} compact display={isEditable ? "" : "none"} type="submit">
+                Submit
+              </Button>
+            </Group>
           </form>
-          <Text c="red" fz="sm" role="alert">
-            {errors.title && errors.title.message}
-          </Text>
-        </Group>
+        </Stack>
 
         <Group>
           <Group>
@@ -96,6 +145,7 @@ const DeckToolbar = ({ deck, searchCallback }: {deck: Deck, searchCallback: Func
             <ActionIcon size="xl" disabled={!deck?.id} onClick={handleDeleteDeck}><IconTrash /></ActionIcon>
             <Text fz="sm">Delete Deck</Text>
           </Group>
+          <SearchBar callback={searchCallback} />
         </Group>
       </Group>
     </>

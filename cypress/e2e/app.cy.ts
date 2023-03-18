@@ -43,13 +43,16 @@ describe("App", () => {
     });
 
     it("New Deck can be created", function () {
+      cy.get("#nav_expand").click();
       cy.get("#nav_Editor").click();
-      cy.contains("Decks").click();
+      cy.get("#nav_segment").click(150, 20);
       cy.contains("Create").click();
     });
 
     it("New Card can be created", function () {
+      cy.get("#nav_expand").click();
       cy.get("#nav_Editor").click();
+      cy.get("#nav_segment").click(150, 20);
       cy.contains("Decks").click();
       cy.contains("untitled").click();
 
@@ -64,7 +67,9 @@ describe("App", () => {
     });
 
     it("Card can be edited", function () {
+      cy.get("#nav_expand").click();
       cy.get("#nav_Editor").click();
+      cy.get("#nav_segment").click(150, 20);
       cy.contains("Decks").click();
       cy.contains("untitled").click();
       cy.get("#card-menu").trigger("mouseover");

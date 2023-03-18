@@ -30,7 +30,7 @@ const useStyles = createStyles((theme) => ({
 
   head: {
     width: "25vw",
-    minWidth: "300px",
+    minWidth: "150px",
   },
 
   menu: {
