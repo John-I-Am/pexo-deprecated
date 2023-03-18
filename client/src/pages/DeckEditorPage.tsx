@@ -18,7 +18,7 @@ const DeckEditorPage = (): ReactElement => {
 
   return (
     <Stack sx={{ height: "100%" }}>
-      <DeckToolbar deck={activeDeck} searchCallback={setFilter} />
+      <DeckToolbar key={activeDeck.id} deck={activeDeck} searchCallback={setFilter} />
       <CardTable cards={cardsToShow} viewOnly={false} />
     </Stack>
   );

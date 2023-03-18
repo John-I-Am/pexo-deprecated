@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 import {
   Modal, ActionIcon, Text, Group, Input, Textarea, Stack, Button,
 } from "@mantine/core";
@@ -7,7 +7,7 @@ import { openConfirmModal } from "@mantine/modals";
 import { useDisclosure, useClickOutside } from "@mantine/hooks";
 import { IconPlus, IconTrash, IconEdit } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
-// import { Deck } from "types";
+import { Deck } from "types";
 import { useAppDispatch } from "../../hooks/hooks";
 import CardEditor from "./CardEditor";
 import { useDeleteDeckMutation, useUpdateDeckMutation } from "../api/apiSlice";
@@ -19,8 +19,8 @@ interface FormValues {
   description: string;
 }
 
-// deck: Deck returns error: description not in type Deck
-const DeckToolbar = ({ deck, searchCallback }: any): ReactElement => {
+const DeckToolbar = ({ deck, searchCallback }: { deck: Deck, searchCallback: Function })
+  : ReactElement => {
   const dispatch = useAppDispatch();
   const [opened, { open, close }] = useDisclosure(false);
   const [isEditable, setIsEditable] = useState<boolean>(false);
@@ -43,11 +43,6 @@ const DeckToolbar = ({ deck, searchCallback }: any): ReactElement => {
     setIsEditable(false);
     resetFormState();
   });
-
-  useEffect(() => {
-    setValue("title", deck.title);
-    setValue("description", deck.description as string);
-  }, [deck]);
 
   const handleChangeDeckInfo = async ({ title, description }: FormValues): Promise<void> => {
     await updateDeck({
@@ -94,6 +89,7 @@ const DeckToolbar = ({ deck, searchCallback }: any): ReactElement => {
               variant={isEditable ? "default" : "unstyled"}
               error={errors.title?.message}
               disabled={!deck?.id}
+              defaultValue={deck.title}
               {...register("title", {
                 required: true,
                 pattern: {
