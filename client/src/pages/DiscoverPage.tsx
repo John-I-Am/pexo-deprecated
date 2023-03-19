@@ -15,8 +15,8 @@ const DiscoverPage = (): ReactElement => {
     <Stack>
       <SearchBar />
       <Group>
-        <DeckInfo deck={alphabetCards} />
-        <DeckInfo deck={monthCards} />
+        <DeckInfo deck={alphabetCards} readOnly={false} />
+        <DeckInfo deck={monthCards} readOnly={false} />
       </Group>
     </Stack>
   );

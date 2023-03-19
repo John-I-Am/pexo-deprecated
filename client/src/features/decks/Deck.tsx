@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 import {
   createStyles, Text, RingProgress, Group, Modal, Button, Stack,
@@ -29,22 +28,36 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const DeckInfo = ({ deck }: any) => {
+const DeckInfo = ({ deck, readOnly }: {deck: any, readOnly: boolean}) => {
   const { classes, theme } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
-  const [addNewDeck, { isSuccess: isSuccessDeck }] = useAddNewDeckMutation();
+  const [addNewDeck, { isSuccess: isSuccessDeck, isLoading }] = useAddNewDeckMutation();
   const [createCard, { isSuccess: isSuccessCard }] = useCreateCardMutation();
 
   const totalCards = deck.cards?.length ?? 0;
   const cardsDue = useCardsDue(deck.cards ?? []).length;
+  const percentageDone = totalCards
+    ? (((totalCards - cardsDue) / totalCards) * 100).toFixed(0)
+    : 100;
 
   const handleAddDeck = async () => {
-    const newDeck: any = await addNewDeck();
+    const newDeck = await addNewDeck().unwrap();
+    const cardCreationPromises: any = [];
+
     deck.cards.forEach(async (newCard: any) => {
-      newCard.deckId = newDeck.data.id;
-      await createCard(newCard);
+      const card = newCard;
+      card.deckId = newDeck.id;
+      const cardPromise = createCard(card);
+      cardCreationPromises.push(cardPromise);
     });
-    if (isSuccessDeck) {
+
+    // This resolves promises in sequential order
+    cardCreationPromises.forEach(async (task: any) => {
+      await task;
+    });
+
+    // This is a hack, not good! notification should not show if deck creation fails
+    if (isSuccessDeck || !isLoading) {
       notifications.show({
         title: "Success",
         message: "Deck added!",
@@ -70,21 +83,22 @@ const DeckInfo = ({ deck }: any) => {
               Total cards
             </Text>
           </Group>
-          <Group>
+          <Group display={readOnly ? "none" : ""}>
             <Button onClick={open}>View cards</Button>
             <Button onClick={() => handleAddDeck()}>Add Deck</Button>
           </Group>
         </Stack>
 
         <RingProgress
+          display={readOnly ? "" : "none"}
           roundCaps
           thickness={6}
           size={150}
-          sections={[{ value: (cardsDue / totalCards) * 100, color: theme.primaryColor }]}
+          sections={[{ value: percentageDone as number, color: theme.primaryColor }]}
           label={(
             <div>
               <Text ta="center" fz="lg" className={classes.label}>
-                {((cardsDue / totalCards) * 100).toFixed(0)}
+                {percentageDone}
                 %
               </Text>
               <Text ta="center" fz="xs" c="dimmed">
@@ -96,6 +110,7 @@ const DeckInfo = ({ deck }: any) => {
       </Group>
 
       <Modal
+        zIndex={2000}
         size="xl"
         withCloseButton={false}
         opened={opened}

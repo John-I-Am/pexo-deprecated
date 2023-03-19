@@ -12,7 +12,6 @@ import {
   Stack,
   Group,
   Container,
-  Text,
 } from "@mantine/core";
 import {
   IconLicense,
@@ -26,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 
 import { Deck } from "types";
+import DeckInfo from "../features/decks/Deck";
 import SearchBar from "./SearchBar";
 import ThemeToggle from "./ThemeToggle";
 
@@ -126,20 +126,14 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   const deckList = decksToShow.map((deck: Deck) => (
     <Tooltip
       key={deck.id}
-      multiline
-      width={120}
-      label={(
-        <>
-          <Text>{deck.title}</Text>
-          <Text>{`${"---"}`}</Text>
-          <Text>
-            {`Total cards: ${deck.cards?.length ?? 0}`}
-          </Text>
-        </>
-      )}
+      label={<DeckInfo deck={deck} readOnly />}
       position="right"
-      withArrow
       offset={20}
+      p="0px"
+      radius="xl"
+      sx={(theme) => ({
+        color: theme.colorScheme === "light" ? theme.colors.dark[7] : theme.white,
+      })}
     >
       <Button
         className={cx({ [classes.linkActive]: deck.id === activeDeckId || activeDeckId === null })}
