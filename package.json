@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "cypress:open": "cypress open",
-    "build:ui": "cd client && npm run build && cd ../server && npm run build",
+    "build:ui": "cd client && npm install && npm run build && cd ../server && npm install && npm run build && rm -rf build",
     "build:deploy": "npm run build:ui && cd client && mv build ../server",
-    "start": "cd server && npm install && npm run start",
+    "start": "npm install && npm run build:deploy",
+    "start:render": "cd server && npm run start",
     "start:cypress:client": "cd client && npm start",
     "start:cypress:server": "cd server && npm run dev",
     "lint": "eslint . --ext .ts,.tsx"
