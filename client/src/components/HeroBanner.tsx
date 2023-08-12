@@ -1,23 +1,21 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import {
   createStyles,
-  Image,
-  Container,
   Title,
-  Button,
-  Group,
   Text,
   List,
   ThemeIcon,
   rem,
+  Box,
+  Group,
 } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
-import Hero from "../assets/images/hero.svg";
+import hero from "../assets/images/hero.mp4";
 
 const useStyles = createStyles((theme) => ({
   content: {
     maxWidth: rem(480),
+    paddingLeft: rem(40),
+    paddingRight: rem(40),
 
     [theme.fn.smallerThan("md")]: {
       maxWidth: "100%",
@@ -38,16 +36,18 @@ const useStyles = createStyles((theme) => ({
 
 const HeroBanner = () => {
   const { classes } = useStyles();
-  const navigate = useNavigate();
 
   return (
-    <Container>
+    <Group position="center">
       <div className={classes.content}>
         <Title className={classes.title}>
           Pexo - A modern spaced repetition system
         </Title>
         <Text color="dimmed" mt="md">
-          An Advanced learning system
+          Uncover the magic of spaced repetition flashcards,
+          enhancing your memory and knowledge retention. Embrace
+          a tailored learning journey that adapts to your pace,
+          ensuring mastery at every step. Say hello to smarter studying.
         </Text>
 
         <List
@@ -62,27 +62,29 @@ const HeroBanner = () => {
         >
           <List.Item>
             <b>Backed by science </b>
-            – Proven techique
           </List.Item>
           <List.Item>
             <b>Free and open source </b>
-            – Open-sourced learning
           </List.Item>
           <List.Item>
             <b>Paperless </b>
-            – Go digital!, no annoying papers
           </List.Item>
-          <h2>In active development - come and see the progress!</h2>
         </List>
-
-        <Group mt={30}>
-          <Button radius="xl" size="md" onClick={() => navigate("/signup")}>
-            Get started
-          </Button>
-        </Group>
       </div>
-      <Image src={Hero} />
-    </Container>
+
+      <Box
+        sx={(theme) => ({
+          borderRadius: theme.radius.lg,
+          width: "100%",
+          height: "100%",
+          maxWidth: "400px",
+        })}
+      >
+        <video width="100%" height="100%" autoPlay muted loop>
+          <source src={hero} type="video/mp4" />
+        </video>
+      </Box>
+    </Group>
   );
 };
 

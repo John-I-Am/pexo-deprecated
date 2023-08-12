@@ -1,24 +1,28 @@
-/* eslint-disable no-unused-vars */
-import { useWindowScroll } from "@mantine/hooks";
 import { ReactElement } from "react";
-import { Container } from "@mantine/core";
+import { Container, Space } from "@mantine/core";
 import HomeHeader from "../components/HomeHeader";
 import HeroBanner from "../components/HeroBanner";
-import AboutSection from "../components/AboutSection";
-import FeatureSection from "../components/FeatureSection";
-
-import logo from "../../assets/logo_transparent.png";
+import HomeSectionWhat from "../components/HomeSectionWhat";
+import HomeSectionHow from "../components/HomeSectionHow";
+import HomeSectionWhy from "../components/HomeSectionWhy";
 
 const HomePage = (): ReactElement => {
   // eslint-disable-next-line no-unused-vars
-  const [scroll, scrollTo] = useWindowScroll();
+  console.log("homepage rendered");
 
   return (
     <Container>
       <HomeHeader />
+      <Space h="xl" />
       <HeroBanner />
-      {/* <AboutSection /> */}
-      {/* <FeatureSection /> */}
+      <Space h="xl" />
+      <HomeSectionWhy />
+      <Space h="xl" />
+      <HomeSectionHow />
+      <Space h="xl" />
+      <HomeSectionWhat />
+      <Space h="xl" />
+
     </Container>
   );
 };
