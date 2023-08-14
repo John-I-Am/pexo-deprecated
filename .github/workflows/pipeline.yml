@@ -18,9 +18,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
-      - name: npm install
-        run: npm install && cd server && npm install && cd ../client && npm install
-      - name: build
+      - name: install project
+        run: npm run build
+      - name: build project
         run: npm run build:deploy    
       - uses: ikalnytskyi/action-setup-postgres@v4 
       # - name: e2e tests     # Error: listen EADDRINUSE: address already in use
@@ -28,9 +28,9 @@ jobs:
       #   with:
       #     start: npm run start:cypress:client, npm run start:cypress:server
       #     wait-on: 'http://localhost:3000, http://localhost:3001'
-      - uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actions
+      # - uses: EndBug/add-and-commit@v9
+      #   with:
+      #     default_author: github_actions
       - name: deploy
         run: curl ${{secrets.RENDER_DEPLOY_HOOK}}
 
