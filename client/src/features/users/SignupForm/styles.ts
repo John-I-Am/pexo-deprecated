@@ -30,6 +30,10 @@ export const Form = styled.form`
   flex-direction: column;
   justify-content: center;
 
+  Label {
+    color: black;
+  }
+
   span {
     display: flex;
     flex-direction: row;

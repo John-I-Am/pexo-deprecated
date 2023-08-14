@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Button } from "@mantine/core";
+import { Button, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { Input, Label, Error } from "../../../sharedStyles";
@@ -53,7 +53,7 @@ const LoginForm = (): ReactElement => {
   return (
     <Container>
       <Header>
-        <h1>Log In</h1>
+        <Title order={1} c="black">Log In</Title>
         <p>
           Not yet a learner? Start your journey
           {" "}

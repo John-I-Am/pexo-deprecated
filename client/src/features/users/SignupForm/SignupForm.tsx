@@ -2,7 +2,7 @@
 import { ReactElement } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@mantine/core";
+import { Button, Title } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useForm } from "react-hook-form";
 import { Input, Label, Error } from "../../../sharedStyles";
@@ -61,7 +61,7 @@ const SignupForm = (): ReactElement => {
   return (
     <Container>
       <Header>
-        <h1>Create Account</h1>
+        <Title order={1} c="black">Create Account</Title>
         <p>
           Already registered? Log in
           {" "}

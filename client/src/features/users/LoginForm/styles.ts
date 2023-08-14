@@ -34,4 +34,8 @@ export const Form = styled.form`
   gap: ${spacing.default};
   flex-direction: column;
   justify-content: center;
+
+  Label {
+    color: black;
+  }
 `;

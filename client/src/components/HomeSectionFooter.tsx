@@ -14,7 +14,7 @@ const HomeSectionFooter = (): ReactElement => {
   console.log("why section rendered");
 
   return (
-    <Group position="apart" spacing="4rem" sx={{ background: "#bbd0ff", padding: "2rem", margin: "-20px" }}>
+    <Group position="apart" spacing="4rem" sx={{ padding: "2rem", margin: "-20px", borderTop: ".5px solid #e0e0e0" }}>
       <Stack>
         <ThemeIcon radius="md" size="xl">
           <IconPhoto />
