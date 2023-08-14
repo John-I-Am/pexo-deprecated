@@ -1,5 +1,4 @@
 import "express-async-errors";
-import sslRedirect from "heroku-ssl-redirect";
 import express from "express";
 import cors from "cors";
 import config from "./utils/config";
@@ -27,7 +26,6 @@ start();
 const app = express();
 app.use(express.static("build"));
 app.use(middleware.requestLogger);
-app.use(sslRedirect());
 
 app.use(cors());
 app.use(express.json());
