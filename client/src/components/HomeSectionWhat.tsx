@@ -9,17 +9,25 @@ import {
   Stack,
 } from "@mantine/core";
 import {
-  IconTableOptions, IconDeviceMobile, IconSpyOff, IconAdOff,
+  IconTableOptions,
+  IconDeviceMobile,
+  IconSpyOff,
+  IconAdOff,
+  IconFreeRights,
+  IconShieldLockFilled,
+  IconPaperclip,
+  IconChartBar,
+  IconHeadphones,
 } from "@tabler/icons-react";
 
 const HomeSectionWhat = (): ReactElement => {
   console.log("what section rendered");
 
   return (
-    <Stack id="home-what">
+    <Stack spacing="4rem" id="home-what">
       <Title variant="gradient" ta="center" order={1}> The What </Title>
 
-      <Group position="center">
+      <Group spacing="lg" position="center">
         <Stack align="center" sx={{ width: "200px" }}>
           <ThemeIcon variant="light" size={rem(80)} radius="lg">
             <IconTableOptions size={rem(60)} />
@@ -60,6 +68,55 @@ const HomeSectionWhat = (): ReactElement => {
           </Container>
         </Stack>
 
+        <Stack align="center" sx={{ width: "200px" }}>
+          <ThemeIcon variant="light" size={rem(80)} radius="lg">
+            <IconFreeRights size={rem(60)} />
+          </ThemeIcon>
+          <Container>
+            <Text align="center" fw={700}>Free and open-sourced</Text>
+            <Text align="center" color="dimmed" size="sm">It&#39;s free.</Text>
+          </Container>
+        </Stack>
+
+        <Stack align="center" sx={{ width: "200px" }}>
+          <ThemeIcon variant="light" size={rem(80)} radius="lg">
+            <IconHeadphones size={rem(60)} />
+          </ThemeIcon>
+          <Container>
+            <Text align="center" fw={700}>Distraction-free</Text>
+            <Text align="center" color="dimmed" size="sm">Simple UI, with no popups to minimize distractions </Text>
+          </Container>
+        </Stack>
+
+        <Stack align="center" sx={{ width: "200px" }}>
+          <ThemeIcon variant="light" size={rem(80)} radius="lg">
+            <IconShieldLockFilled size={rem(60)} />
+          </ThemeIcon>
+          <Container>
+            <Text align="center" fw={700}>Secure</Text>
+            <Text align="center" color="dimmed" size="sm">Encrypted data</Text>
+          </Container>
+        </Stack>
+
+        <Stack align="center" sx={{ width: "200px" }}>
+          <ThemeIcon variant="light" size={rem(80)} radius="lg">
+            <IconPaperclip size={rem(60)} />
+          </ThemeIcon>
+          <Container>
+            <Text align="center" fw={700}>Paperless</Text>
+            <Text align="center" color="dimmed" size="sm">No more losing your cards!</Text>
+          </Container>
+        </Stack>
+
+        <Stack align="center" sx={{ width: "200px" }}>
+          <ThemeIcon variant="light" size={rem(80)} radius="lg">
+            <IconChartBar size={rem(60)} />
+          </ThemeIcon>
+          <Container>
+            <Text align="center" fw={700}>Data-driven</Text>
+            <Text align="center" color="dimmed" size="sm">Track your progress</Text>
+          </Container>
+        </Stack>
       </Group>
     </Stack>
   );

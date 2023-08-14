@@ -85,13 +85,13 @@ const HomeHeader = () => {
           </ThemeIcon>
 
           <Group sx={{ height: "100%" }} spacing={0} className={classes.hiddenMobile}>
-            <a key="Home" href="#home-home" className={classes.link} onClick={(event) => event.preventDefault()}>
-              Home
+            <a key="why" href="#home-why" className={classes.link}>
+              Why
             </a>
-            <a key="learn" href="#home-learn" className={classes.link} onClick={(event) => event.preventDefault()}>
-              Learn
+            <a key="how" href="#home-how" className={classes.link}>
+              How
             </a>
-            <a key="Feature" href="#home-features" className={classes.link} onClick={(event) => event.preventDefault()}>
+            <a key="what" href="#home-what" className={classes.link}>
               Features
             </a>
           </Group>

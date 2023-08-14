@@ -7,11 +7,11 @@ const HomeSectionWhy = () => {
   console.log("why section rendered");
 
   return (
-    <Group position="center" spacing="xl" sx={{ background: "#bbd0ff", borderRadius: "32px" }}>
+    <Group id="home-why" position="center" spacing="xl" sx={{ background: "#bbd0ff", borderRadius: "3rem", padding: "2rem" }}>
       <Why width="50%" height="50%" />
-      <Stack sx={{ width: "200px" }}>
+      <Stack spacing="4rem" sx={{ width: "20rem" }}>
         <Title c="black" ta="center" order={1}> The Why </Title>
-        <Text c="black" size="sm">
+        <Text c="black">
           Step into the realm of effective learning with spaced repetition,
           a technique rooted in cognitive science. Inspired by the 19th-century
           Ebbinghaus forgetting curve, spaced repetition strategically revisits
