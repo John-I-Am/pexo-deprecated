@@ -18,8 +18,7 @@ describe("App", () => {
   });
 
   it("user can log in", function () {
-    cy.contains("Join beta").click();
-    cy.contains("here").click();
+    cy.contains("Log in").click();
     cy.get("input:first").type("root1@root.com");
     cy.get("input:last").type("rootPass123");
     cy.contains("Login").click();
@@ -28,7 +27,7 @@ describe("App", () => {
   });
 
   it("login fails with wrong password", function () {
-    cy.contains("Join beta").click();
+    cy.contains("Sign up").click();
     cy.contains("here").click();
     cy.get("input:first").type("ro11@root.com");
     cy.get("input:last").type("wrongPassword");
@@ -43,18 +42,12 @@ describe("App", () => {
     });
 
     it("New Deck can be created", function () {
-      cy.get("#nav_expand").click();
-      cy.get("#nav_Editor").click();
-      cy.get("#nav_segment").click(150, 20);
-      cy.contains("Create").click();
+      cy.get("#creator").click();
     });
 
     it("New Card can be created", function () {
-      cy.get("#nav_expand").click();
-      cy.get("#nav_Editor").click();
-      cy.get("#nav_segment").click(150, 20);
-      cy.contains("Decks").click();
       cy.contains("untitled").click();
+      cy.get("#editor").click();
 
       cy.get("#add_card").click();
 
@@ -67,11 +60,8 @@ describe("App", () => {
     });
 
     it("Card can be edited", function () {
-      cy.get("#nav_expand").click();
-      cy.get("#nav_Editor").click();
-      cy.get("#nav_segment").click(150, 20);
-      cy.contains("Decks").click();
       cy.contains("untitled").click();
+      cy.get("#editor").click();
       cy.get("#card-menu").trigger("mouseover");
       cy.get("#card-edit").click();
       cy.get("#input_front").type("edited front", { force: true });
@@ -86,7 +76,7 @@ describe("App", () => {
       cy.contains("Alphabet").parent().parent().within(() => {
         cy.contains("Add Deck").click();
       });
-      cy.get("#nav_Editor").click();
+      cy.get("#editor").click();
     });
   });
 });

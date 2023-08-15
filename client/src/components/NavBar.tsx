@@ -1,9 +1,8 @@
 import { ReactElement, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 import {
   Navbar,
-  SegmentedControl,
   createStyles,
   getStylesRef,
   rem,
@@ -12,16 +11,19 @@ import {
   Stack,
   Group,
   Container,
+  Title,
+  ActionIcon,
 } from "@mantine/core";
+
 import {
-  IconLicense,
   IconPlus,
   IconBellRinging,
-  IconKey,
   IconUsers,
   IconLogout,
   IconSwitchHorizontal,
   IconSearch,
+  IconCursorText,
+  IconChecks,
 } from "@tabler/icons-react";
 
 import { Deck } from "types";
@@ -37,12 +39,21 @@ import { setActive } from "../features/decks/decksSlice";
 import { clearUser } from "../features/users/usersSlice";
 
 const useStyles = createStyles((theme) => ({
+  section: {
+    display: "flex",
+    flexDirection: "column",
+    paddingBottom: "1rem",
+    borderBottom: `${rem(1)} solid ${
+      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
+    }`,
+  },
+
   link: {
     ...theme.fn.focusStyles(),
     display: "flex",
     alignItems: "center",
     textDecoration: "none",
-    fontSize: theme.fontSizes.sm,
+    fontSize: theme.fontSizes.xs,
     color: theme.colorScheme === "dark" ? theme.colors.dark[1] : theme.colors.gray[7],
     padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
     borderRadius: theme.radius.sm,
@@ -80,22 +91,11 @@ const useStyles = createStyles((theme) => ({
       },
     },
   },
-
-  footer: {
-    display: "flex",
-    flexDirection: "column",
-    gap: theme.spacing.xs,
-    borderTop: `${rem(1)} solid ${
-      theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[3]
-    }`,
-    paddingTop: theme.spacing.md,
-  },
 }));
 
 const navs = [
   { link: "/main/learn", label: "Study", icon: IconBellRinging },
   { link: "/main/discover", label: "Discover", icon: IconSearch },
-  { link: "/main/editor", label: "Editor", icon: IconLicense },
   // { link: "/main/dashboard", label: "Dashboard", icon: IconKey },
   { link: "/main/account", label: "Account", icon: IconUsers },
 ];
@@ -107,8 +107,8 @@ interface NavBarProps {
 
 const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   const { classes, cx } = useStyles();
-  const [section, setSection] = useState<"navigate" | "decks">("navigate");
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [addNewDeck] = useAddNewDeckMutation();
   const activeDeckId = useAppSelector((state) => state.decks.activeDeckId);
   const { data: decks = [] } = useGetDecksQuery();
@@ -128,7 +128,6 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
       key={deck.id}
       label={<DeckInfo deck={deck} readOnly />}
       position="right"
-      offset={20}
       p="0px"
       radius="xl"
       sx={(theme) => ({
@@ -137,7 +136,9 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
     >
       <Button
         className={cx({ [classes.linkActive]: deck.id === activeDeckId || activeDeckId === null })}
-        variant="outline"
+        compact
+        radius="md"
+        variant="subtle"
         key={deck.id}
         onClick={() => dispatch(setActive(deck.id as any) as any)}
       >
@@ -156,7 +157,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
       key={item.label}
     >
       <Tooltip disabled={opened} label={item.label} position="right" withArrow offset={20}>
-        <item.icon className={classes.linkIcon} stroke={1.5} />
+        <item.icon className={classes.linkIcon} stroke={1.5} size="1.2rem" />
       </Tooltip>
       <span>{item.label}</span>
     </NavLink>
@@ -165,7 +166,6 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   return (
     <Navbar
       id="nav_bar"
-      height="100%"
       sx={(theme) => ({
         width: opened ? 300 : 100,
         transition: "width .2s",
@@ -174,50 +174,45 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
           display: opened ? "flex" : "none",
         },
       })}
-      p="md"
+      p="sm"
     >
-      <Navbar.Section>
-        <SegmentedControl
-          id="nav_segment"
-          sx={{ visibility: opened ? "visible" : "hidden" }}
-          value={section}
-          onChange={(value: "navigate" | "decks") => setSection(value)}
-          transitionTimingFunction="ease"
-          fullWidth
-          data={[
-            { label: "Navigate", value: "navigate" },
-            { label: "Decks", value: "decks" },
-          ]}
-        />
+
+      <Navbar.Section className={classes.section}>
+        {links}
       </Navbar.Section>
 
-      <Navbar.Section grow mt="xl" sx={{ overflow: "scroll" }}>
-        {section === "navigate"
-          ? links
-          : (
-            <Stack>
-              <Stack>
-                <Group>
-                  <Tooltip disabled={opened} label="Create" position="right" withArrow offset={20}>
-                    <Button onClick={() => addNewDeck()} leftIcon={<IconPlus />}>
-                      {opened ? "Create" : ""}
-                    </Button>
-                  </Tooltip>
-                  <Tooltip disabled={opened} label="All" position="right" withArrow offset={20}>
-                    <Button onClick={() => dispatch(setActive(null))} leftIcon={<IconKey />}>
-                      {opened ? "All" : ""}
-                    </Button>
-                  </Tooltip>
-                </Group>
+      <Navbar.Section className={classes.section} h="1%" grow>
+        <Group py="1rem" position="apart">
+          <Title order={6}> Decks</Title>
+          <Group position="left">
+            <Tooltip label="Create deck" withArrow position="right">
+              <ActionIcon id="creator" variant="default" size={18} onClick={() => addNewDeck()}>
+                <IconPlus size="0.8rem" stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>
 
-                <SearchBar display={opened ? "" : "none"} callback={setFilter} />
-              </Stack>
-              {deckList}
-            </Stack>
-          )}
+            <Tooltip label="Select all" withArrow position="right">
+              <ActionIcon id="select_all" variant="default" size={18} onClick={() => dispatch(setActive(null))}>
+                <IconChecks size="0.8rem" stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>
+
+            <Tooltip label="Editor" withArrow position="right">
+              <ActionIcon id="editor" variant="default" size={18} onClick={() => navigate("/main/editor")}>
+                <IconCursorText size="0.8rem" stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        </Group>
+
+        <SearchBar display={opened ? "" : "none"} callback={setFilter} />
+
+        <Stack sx={{ overflow: "scroll" }} pt="1rem">
+          {deckList}
+        </Stack>
       </Navbar.Section>
 
-      <Navbar.Section className={classes.footer}>
+      <Navbar.Section className={classes.section} py="1rem" sx={{ border: "none" }}>
         <ThemeToggle />
 
         <Container
