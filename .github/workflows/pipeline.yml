@@ -1,7 +1,7 @@
 name: Deployment pipeline
 
 env:
-  DATABASE_URL_TEST: postgresql://postgres:postgres@localhost/postgres
+  DATABASE_URL_TEST: postgres://
   PORT: 3001
   SECRET: ${{secrets.SECRET}}
 
@@ -18,19 +18,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '20'
-      - name: install project
-        run: npm run build
-      - name: build project
-        run: npm run build:deploy    
-      - uses: ikalnytskyi/action-setup-postgres@v4 
-      # - name: e2e tests     # Error: listen EADDRINUSE: address already in use
-      #   uses: cypress-io/github-action@v4
-      #   with:
-      #     start: npm run start:cypress:client, npm run start:cypress:server
-      #     wait-on: 'http://localhost:3000, http://localhost:3001'
-      # - uses: EndBug/add-and-commit@v9
-      #   with:
-      #     default_author: github_actions
+      # - name: install project                   cypress action won't work??!!!??!!??!!
+      #   run: npm run build
+      # - name: build project
+      #   run: npm run build:deploy    
+      # - name: e2e tests 
+      #   uses: cypress-io/github-action@v5
       - name: deploy
         run: curl ${{secrets.RENDER_DEPLOY_HOOK}}
 
