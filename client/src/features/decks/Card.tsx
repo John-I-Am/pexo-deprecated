@@ -54,7 +54,7 @@ const Card = ({ cardToStudy }: any): ReactElement => {
   };
 
   return (
-    <Stack justify="space-around" sx={{ height: "100%" }}>
+    <Stack justify="space-between" sx={{ height: "100%" }}>
       {renderContent()}
       <CardContentClassic content={cardToStudy.back} guessed={guessed} />
 

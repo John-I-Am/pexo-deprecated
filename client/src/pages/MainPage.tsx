@@ -36,6 +36,9 @@ const MainPage = (): ReactElement => {
     >
       <NavBar opened={open} handleOpen={setOpened} />
       <Burger
+        pl=".5rem"
+        pt=".5rem"
+        size="sm"
         sx={(theme) => ({
           [`@media (min-width: ${theme.breakpoints.sm})`]: {
             display: "none",

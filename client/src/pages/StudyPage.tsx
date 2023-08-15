@@ -1,21 +1,28 @@
 import { ReactElement } from "react";
 import { Card } from "types";
 import {
-  Stack, Image, Text, Container,
+  Stack, Text, Container, ThemeIcon,
 } from "@mantine/core";
+import { IconCards } from "@tabler/icons-react";
 import { useActiveDeck, useCardsDue } from "../hooks/hooks";
 import CardComponent from "../features/decks/Card";
 import TagList from "../components/TagList";
 import ProgressBar from "../components/ProgressBar";
-import done from "../assets/images/done.svg";
 
 const Cardless = (): ReactElement => (
-  <Stack align="center" sx={{ width: "80%" }}>
-    <Image width="80%" src={done} alt="empty deck" />
-    <Container pb="xl">
-      <Text fw={700} fs="italic">All Done :)</Text>
-      <Text fs="italic"> No Cards Due For Review In This Deck </Text>
-    </Container>
+  <Stack ml="-1.5rem" mb="33%">
+    <ThemeIcon variant="light" size="100%" radius="lg">
+      <IconCards size="100%" />
+    </ThemeIcon>
+    <Text
+      variant="gradient"
+      gradient={{ from: "indigo", to: "cyan", deg: 45 }}
+      fz="2rem"
+      align="center"
+      fw={700}
+    >
+      Deck Empty!
+    </Text>
   </Stack>
 );
 
@@ -29,17 +36,20 @@ const StudyPage = (): ReactElement => {
       : (((activeDeck.cards.length - cardsToStudy.length) / activeDeck.cards.length) * 100);
 
   return (
-    <Stack align="center" justify="space-between" sx={{ height: "100%" }}>
+    <Container h="95%">
       <ProgressBar
         value={percentageDone}
         label={`${Math.round(percentageDone)}% (${cardsToStudy.length} / ${activeDeck?.cards?.length})`}
       />
-      <TagList />
 
-      {cardsToStudy.length !== 0
-        ? <CardComponent cardToStudy={cardsToStudy[0]} />
-        : <Cardless />}
-    </Stack>
+      <Stack align="center" justify="space-around" h="95%">
+        <TagList />
+        {cardsToStudy.length !== 0
+          ? <CardComponent cardToStudy={cardsToStudy[0]} />
+          : <Cardless />}
+      </Stack>
+    </Container>
+
   );
 };
 
