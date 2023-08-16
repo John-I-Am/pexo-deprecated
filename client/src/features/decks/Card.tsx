@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement, useState } from "react";
 import { Stack } from "@mantine/core";
 import { useUpdateCardMutation } from "../api/apiSlice";
@@ -50,13 +49,12 @@ const Card = ({ cardToStudy }: any): ReactElement => {
         />
       );
     }
-    return <CardContentClassic content={cardToStudy.front} guessed={!guessed} />;
+    return <CardContentClassic front={cardToStudy.front} back={cardToStudy.back} />;
   };
 
   return (
-    <Stack justify="space-between" sx={{ height: "100%" }}>
+    <Stack justify="space-between" ml="-2rem" sx={{ height: "100%" }}>
       {renderContent()}
-      <CardContentClassic content={cardToStudy.back} guessed={guessed} />
 
       <CardToolbar
         card={cardToStudy}

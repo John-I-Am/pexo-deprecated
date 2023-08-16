@@ -30,7 +30,6 @@ const CardToolbar = ({
       <Group
         noWrap
         position="apart"
-        ml="-2rem"
         sx={(theme: any) => ({
           backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.blue[9],
           padding: "0 16px 0 16px",
