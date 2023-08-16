@@ -53,7 +53,7 @@ const Card = ({ cardToStudy }: any): ReactElement => {
   };
 
   return (
-    <Stack justify="space-between" ml="-2rem" sx={{ height: "100%" }}>
+    <Stack ml="-2rem" sx={{ height: "100%", width: "100%" }}>
       {renderContent()}
 
       <CardToolbar

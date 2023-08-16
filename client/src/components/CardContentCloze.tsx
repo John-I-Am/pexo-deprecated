@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Container, createStyles, Input } from "@mantine/core";
+import { createStyles, Input, Stack } from "@mantine/core";
 import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -16,6 +16,7 @@ const useStyles = createStyles(() => ({
       border: "none",
       borderBottom: "1px solid grey",
       fontSize: "2rem",
+      textAlign: "center",
     },
   },
 
@@ -55,7 +56,7 @@ const CardContentCloze = (
   };
 
   return (
-    <Container>
+    <Stack justify="center" h="100%">
       <form onSubmit={handleSubmit(handleGuess)}>
         <Input
           readOnly={guessed}
@@ -66,8 +67,7 @@ const CardContentCloze = (
           {...register("cloze")}
         />
       </form>
-
-    </Container>
+    </Stack>
   );
 };
 

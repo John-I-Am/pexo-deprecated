@@ -1,5 +1,5 @@
 import {
-  ActionIcon, Button, Container, Group, Text, Modal,
+  ActionIcon, Group, Text, Modal,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ReactElement } from "react";
@@ -28,40 +28,43 @@ const CardToolbar = ({
         <CardNote notes={card?.examples} />
       </Modal>
       <Group
-        noWrap
+        px="sm"
         position="apart"
         sx={(theme: any) => ({
-          backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[5] : theme.colors.blue[9],
-          padding: "0 16px 0 16px",
           borderRadius: theme.radius.md,
-
-          [`@media (max-width: ${theme.breakpoints.sm})`]: {
-          },
+          borderBottom: "1px solid black",
         })}
       >
-        <Text fw={700}>
-          {`Level: ${card.level}`}
-        </Text>
-        <Group sx={{ display: card.type !== "classic" ? "none" : "" }}>
-          <Button uppercase color="green" leftIcon={<IconCheck size="1rem" />} onClick={() => handleGuessed(true)}>correct</Button>
-          <Button uppercase color="red" leftIcon={<IconX size="1rem" />} onClick={() => handleGuessed(false)}>incorrect</Button>
-        </Group>
+
         <Group>
-          <Container>
-            <ActionIcon color="white" size="2rem" onClick={() => open()} variant="transparent">
-              <IconNote />
-            </ActionIcon>
-          </Container>
+          <Text fw={700}>
+            {`Level: ${card.level}`}
+          </Text>
+          <Text fs="italic" fz="sm">
+            {card.type}
+          </Text>
+        </Group>
 
-          <Container display={card.audio ? "" : "none"}>
-            <ActionIcon color="white" size="2rem" onClick={() => audio.play()} variant="transparent">
-              <IconVolume />
-            </ActionIcon>
-          </Container>
+        <Group noWrap>
+          <ActionIcon color="cyan" onClick={() => open()} variant="transparent">
+            <IconNote />
+          </ActionIcon>
 
-          <Container display={checked ? "" : "none"}>
-            <Button rightIcon={<IconChevronRight size="1rem" />} onClick={() => handleGuessed(false)}>Next</Button>
-          </Container>
+          <ActionIcon display={card.audio ? "" : "none"} color="cyan" onClick={() => audio.play()} variant="transparent">
+            <IconVolume />
+          </ActionIcon>
+
+          <ActionIcon size="lg" color="green" variant="filled" disabled={checked} onClick={() => handleGuessed(true)} display={card.type !== "classic" ? "none" : ""}>
+            <IconCheck />
+          </ActionIcon>
+
+          <ActionIcon size="lg" color="red" variant="filled" disabled={checked} onClick={() => handleGuessed(false)} display={card.type !== "classic" ? "none" : ""}>
+            <IconX />
+          </ActionIcon>
+
+          <ActionIcon size="lg" color="dark" display={checked ? "" : "none"} onClick={() => handleGuessed(false)}>
+            <IconChevronRight />
+          </ActionIcon>
         </Group>
       </Group>
     </>

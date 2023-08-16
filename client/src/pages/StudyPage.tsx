@@ -36,13 +36,14 @@ const StudyPage = (): ReactElement => {
       : (((activeDeck.cards.length - cardsToStudy.length) / activeDeck.cards.length) * 100);
 
   return (
-    <Container h="95%">
+    <Container h="100%">
       <ProgressBar
         value={percentageDone}
         label={`${Math.round(percentageDone)}% (${cardsToStudy.length} / ${activeDeck?.cards?.length})`}
       />
 
-      <Stack align="center" justify="space-around" h="95%">
+      {/* height at 98% otherwise, there'll be a strange extra spacing that i can't find */}
+      <Stack align="center" justify="space-around" h="98%">
         <TagList />
         {cardsToStudy.length !== 0
           ? <CardComponent cardToStudy={cardsToStudy[0]} />
