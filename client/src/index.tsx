@@ -17,7 +17,7 @@ import DiscoverPage from "./pages/DiscoverPage";
 
 import store from "./store";
 import DeckEditorPage from "./pages/DeckEditorPage";
-import AccountPage from "./pages/AccountPage/AccountPage";
+import AccountPage from "./pages/AccountPage";
 import StudyPage from "./pages/StudyPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import Error404 from "./components/Error404";

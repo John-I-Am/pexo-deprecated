@@ -166,6 +166,7 @@ const NavBar = ({ opened, handleOpen }: NavBarProps): ReactElement => {
   return (
     <Navbar
       id="nav_bar"
+      mr="lg"
       sx={(theme) => ({
         width: opened ? 300 : 100,
         transition: "width .2s",
