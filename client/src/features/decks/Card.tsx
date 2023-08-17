@@ -59,6 +59,8 @@ const Card = ({ cardToStudy }: any): ReactElement => {
       <CardToolbar
         card={cardToStudy}
         handleGuessed={handleGuessed}
+        handleCorrect={handleCorrect}
+        handleIncorrect={handleIncorrect}
         checked={guessed}
       />
     </Stack>
