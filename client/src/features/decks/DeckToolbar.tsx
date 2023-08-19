@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect } from "react";
 import {
-  Modal, ActionIcon, Text, Group, Input, Textarea, Stack, Button,
+  Modal, Text, Group, TextInput, Textarea, Stack, Button,
 } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
-import { useDisclosure, useClickOutside } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { IconPlus, IconTrash, IconEdit } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { Deck } from "types";
@@ -23,26 +23,22 @@ const DeckToolbar = ({ deck, searchCallback }: { deck: Deck, searchCallback: Fun
   : ReactElement => {
   const dispatch = useAppDispatch();
   const [opened, { open, close }] = useDisclosure(false);
-  const [isEditable, setIsEditable] = useState<boolean>(false);
   const [deleteDeck] = useDeleteDeckMutation();
   const [updateDeck, { isLoading: isLoadingUpdate }] = useUpdateDeckMutation();
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm<FormValues>();
+    reset,
+    formState: { errors, isDirty },
+  } = useForm<FormValues>({ defaultValues: { title: deck.title, description: deck.description || "" } });
 
-  const resetFormState = () => {
-    setValue("title", deck.title);
-    setValue("description", deck.description as string);
-  };
-
-  const ref = useClickOutside(() => {
-    setIsEditable(false);
-    resetFormState();
-  });
+  useEffect(() => {
+    reset({
+      title: deck.title,
+      description: deck.description,
+    });
+  }, [deck]);
 
   const handleChangeDeckInfo = async ({ title, description }: FormValues): Promise<void> => {
     await updateDeck({
@@ -50,7 +46,6 @@ const DeckToolbar = ({ deck, searchCallback }: { deck: Deck, searchCallback: Fun
       title,
       description: description || " ", // TODO: not optional, need to alter backend to allow empty string
     });
-    setIsEditable(false);
   };
 
   const handleDeleteDeck = (): void => {
@@ -80,32 +75,39 @@ const DeckToolbar = ({ deck, searchCallback }: { deck: Deck, searchCallback: Fun
       >
         <CardEditor card={undefined} />
       </Modal>
-      <Group p="md" position="apart">
-        <Stack>
-          <form ref={ref} onSubmit={handleSubmit(handleChangeDeckInfo)}>
-            <Input
-              styles={{ input: { fontSize: "2rem" } }}
-              readOnly={!isEditable}
-              variant={isEditable ? "default" : "unstyled"}
-              error={errors.title?.message}
-              disabled={!deck?.id}
-              defaultValue={deck.title}
-              {...register("title", {
-                required: true,
-                pattern: {
-                  value: /^[a-zA-Z0-9_ ]{1,20}$/i,
-                  message: "length exceeded / invalid characters",
-                },
-              })}
-            />
+      <Group pt="sm" spacing="0">
+        <Stack w="100%" align="center">
+          <form onSubmit={handleSubmit(handleChangeDeckInfo)}>
+            <Group>
+              <TextInput
+                radius="lg"
+                styles={(theme) => ({
+                  input: {
+                    border: "none",
+                    background: theme.colorScheme === "light" ? theme.colors.gray[0] : theme.colors.dark[5],
+                  },
+                })}
+                error={errors.title?.message}
+                disabled={!deck?.id}
+                {...register("title", {
+                  required: true,
+                  pattern: {
+                    value: /^[a-zA-Z0-9_ ]{1,20}$/i,
+                    message: "length exceeded / invalid characters",
+                  },
+                })}
+              />
+              <Button leftIcon={<IconEdit size="1rem" />} loading={isLoadingUpdate} compact display={isDirty ? "" : "none"} type="submit">
+                Edit
+              </Button>
+            </Group>
 
             <Textarea
               styles={(theme) => ({ input: { color: theme.colors.gray[6] } })}
               autosize
-              readOnly={!isEditable}
-              placeholder="description.."
-              variant={isEditable ? "default" : "unstyled"}
-              defaultValue={deck?.description ?? ""}
+              variant="unstyled"
+              size="xs"
+              placeholder={deck.id ? "description.." : "Viewing combined decks, Select deck to edit"}
               error={errors.description?.message}
               {...register("description", {
                 pattern: {
@@ -114,34 +116,17 @@ const DeckToolbar = ({ deck, searchCallback }: { deck: Deck, searchCallback: Fun
                 },
               })}
             />
-
-            <Group position="apart">
-              <ActionIcon
-                disabled={!deck?.id}
-                onClick={() => {
-                  setIsEditable(!isEditable);
-                  resetFormState();
-                }}
-              >
-                <IconEdit size="1rem" />
-              </ActionIcon>
-              <Button loading={isLoadingUpdate} compact display={isEditable ? "" : "none"} type="submit">
-                Submit
-              </Button>
-            </Group>
           </form>
         </Stack>
 
-        <Group>
-          <Group>
-            <ActionIcon id="add_card" size="xl" disabled={!deck?.id} onClick={() => open()}><IconPlus /></ActionIcon>
-            <Text fz="sm">New Card</Text>
-          </Group>
-          <Group>
-            <ActionIcon size="xl" disabled={!deck?.id} onClick={handleDeleteDeck}><IconTrash /></ActionIcon>
-            <Text fz="sm">Delete Deck</Text>
-          </Group>
+        <Group grow>
           <SearchBar callback={searchCallback} />
+          <Button leftIcon={<IconPlus size="1rem" />} disabled={!deck?.id} onClick={() => open()} compact>
+            Create Card
+          </Button>
+          <Button leftIcon={<IconTrash size="1rem" />} c="red" disabled={!deck?.id} onClick={handleDeleteDeck} compact>
+            Delete Deck
+          </Button>
         </Group>
       </Group>
     </>
