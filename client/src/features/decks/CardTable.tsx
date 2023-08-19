@@ -1,11 +1,13 @@
 import { ReactElement, useState } from "react";
 import {
-  createStyles, Table, Modal, Menu, Group, Text, ActionIcon, Stack, Box,
+  createStyles, Table, Modal, Menu, Group, Text, ActionIcon,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import { Card } from "types";
-import { IconDotsVertical, IconTrash, IconEdit } from "@tabler/icons-react";
+import {
+  IconDotsVertical, IconTrash, IconEdit, IconArrowsSort,
+} from "@tabler/icons-react";
 import CardEditor from "./CardEditor";
 import { useDeleteCardMutation } from "../api/apiSlice";
 
@@ -13,28 +15,23 @@ const useStyles = createStyles((theme) => ({
   table: {
     display: "block",
     overflow: "auto",
-    paddingLeft: theme.spacing.lg,
 
     thead: {
       position: "sticky",
       top: 0,
       zIndex: 2,
-      background: theme.colorScheme === "dark" ? theme.colors.dark[8] : "white",
+      background: theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.colors.blue[0],
+    },
+
+    th: {
+      width: "100%",
     },
 
     td: {
-      maxWidth: "300px",
+      minWidth: "10rem",
+      maxWidth: "20rem",
       overflowWrap: "break-word",
     },
-  },
-
-  head: {
-    width: "25vw",
-    minWidth: "150px",
-  },
-
-  menu: {
-    display: "none",
   },
 }));
 
@@ -48,6 +45,58 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
   const [opened, { open, close }] = useDisclosure(false);
   const [cardToEdit, setCardToEdit] = useState<Card | null>();
   const [deleteCard] = useDeleteCardMutation();
+
+  const [sortedKey, setSortedKey] = useState("levelDESC");
+
+  let sortedCards: Card[];
+  switch (sortedKey) {
+    case "levelDESC":
+      sortedCards = [...cards].sort((a, b) => b.level - a.level);
+      break;
+    case "levelASC":
+      sortedCards = [...cards].sort((a, b) => a.level - b.level);
+      break;
+    case "dateDESC":
+      // eslint-disable-next-line max-len
+      sortedCards = [...cards].sort((a, b) => new Date(b.checkpointDate).getTime() - (new Date(a.checkpointDate).getTime()));
+      break;
+    case "dateASC":
+      // eslint-disable-next-line max-len
+      sortedCards = [...cards].sort((a, b) => new Date(a.checkpointDate).getTime() - (new Date(b.checkpointDate).getTime()));
+      break;
+    case "cloze":
+      sortedCards = [...cards].sort((a, b) => a.type.localeCompare(b.type));
+      break;
+    case "classic":
+      sortedCards = [...cards].sort((a, b) => b.type.localeCompare(a.type));
+      break;
+    default:
+      sortedCards = [...cards];
+  }
+
+  const handleSortLevel = () => {
+    if (sortedKey === "levelDESC") {
+      setSortedKey("levelASC");
+    } else {
+      setSortedKey("levelDESC");
+    }
+  };
+
+  const handleSortDate = () => {
+    if (sortedKey === "dateASC") {
+      setSortedKey("dateDESC");
+    } else {
+      setSortedKey("dateASC");
+    }
+  };
+
+  const handleSortType = () => {
+    if (sortedKey === "cloze") {
+      setSortedKey("classic");
+    } else {
+      setSortedKey("cloze");
+    }
+  };
 
   const handleOpenEdit = (card: Card): void => {
     setCardToEdit(card);
@@ -64,7 +113,6 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onCancel: () => console.log("Cancel"),
       onConfirm: () => deleteCard(card),
     });
   };
@@ -78,62 +126,86 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
       >
         <thead>
           <tr>
-            <th className={classes.head}>Overview</th>
-            <th className={classes.head}>Front</th>
-            <th className={classes.head}>Back</th>
-            <th className={classes.head}>Next Review</th>
+            <th>
+              <Group noWrap position="center">
+                Content
+              </Group>
+            </th>
+            <th>
+              <Group noWrap>
+                Type
+                <ActionIcon onClick={() => handleSortType()}>
+                  <IconArrowsSort />
+                </ActionIcon>
+              </Group>
+            </th>
+            <th style={{ display: viewOnly ? "none" : "" }}>
+              <Group noWrap>
+                Level
+                <ActionIcon onClick={() => handleSortLevel()}>
+                  <IconArrowsSort />
+                </ActionIcon>
+              </Group>
+            </th>
+            <th style={{ display: viewOnly ? "none" : "" }}>
+              <Group noWrap>
+                Review
+                <ActionIcon onClick={() => handleSortDate()}>
+                  <IconArrowsSort />
+                </ActionIcon>
+              </Group>
+            </th>
           </tr>
         </thead>
         <tbody>
-          {cards.map((card: Card) => (
+          {sortedCards.map((card: Card) => (
             <tr key={card.id}>
               <td>
-                <Group position="left">
-                  <Box id="card-menu" sx={{ display: viewOnly ? "none" : "" }}>
-                    <Menu trigger="hover" openDelay={100} closeDelay={400}>
-                      <Menu.Target>
-                        <ActionIcon>
-                          <IconDotsVertical />
-                        </ActionIcon>
-                      </Menu.Target>
-                      <Menu.Dropdown>
-                        <Menu.Item
-                          id="card-edit"
-                          onClick={() => handleOpenEdit(card)}
-                          icon={<IconEdit />}
-                        >
-                          Edit
-                        </Menu.Item>
-
-                        <Menu.Item
-                          id="card-delete"
-                          onClick={() => handleDeleteCard(card)}
-                          color="red"
-                          icon={<IconTrash />}
-                        >
-                          Delete
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </Box>
-
-                  <Stack>
-                    <Text fw="700" sx={{ display: viewOnly ? "none" : "" }}>{`Level: ${card.level}`}</Text>
-                    <Text fs="italic">{`${card.type}`}</Text>
-                  </Stack>
-
-                </Group>
+                <Text fw="700">Front:</Text>
+                <Text>{card.front}</Text>
+                <Text fw="700" pt="lg">Back:</Text>
+                <Text>{card.back}</Text>
               </td>
-              <td>{card.front}</td>
-              <td>{card.back}</td>
               <td>
-                {new Date(card.checkpointDate).getTime() <= (new Date().getTime())
-                  ? <p>Now</p>
-                  : <p>{new Date(card.checkpointDate).toLocaleString("en-NZ")}</p>}
+                <Text fs="italic">{`${card.type}`}</Text>
+              </td>
+              <td style={{ display: viewOnly ? "none" : "" }}>
+                <Text fw="700">{`Level: ${card.level}`}</Text>
+              </td>
+              <td style={{ display: viewOnly ? "none" : "" }}>
+                <Group noWrap position="apart">
+                  {new Date(card.checkpointDate).getTime() <= (new Date().getTime())
+                    ? <Text>Now</Text>
+                    : <Text>{new Date(card.checkpointDate).toLocaleString("en-NZ")}</Text>}
+                  <Menu trigger="hover" openDelay={100} closeDelay={400}>
+                    <Menu.Target>
+                      <ActionIcon>
+                        <IconDotsVertical />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        id="card-edit"
+                        onClick={() => handleOpenEdit(card)}
+                        icon={<IconEdit />}
+                      >
+                        Edit
+                      </Menu.Item>
+
+                      <Menu.Item
+                        id="card-delete"
+                        onClick={() => handleDeleteCard(card)}
+                        color="red"
+                        icon={<IconTrash />}
+                      >
+                        Delete
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </Group>
               </td>
             </tr>
           ))}
-
         </tbody>
       </Table>
       <Modal
