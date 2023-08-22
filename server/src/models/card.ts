@@ -1,6 +1,7 @@
 import {
   Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey,
 } from "sequelize";
+import { CardContent } from "types";
 import db from "../utils/db";
 
 const { sequelize } = db;
@@ -15,11 +16,7 @@ class Card extends Model<InferAttributes<Card>, InferCreationAttributes<Card>> {
 
   declare tags: CreationOptional<Array<string>>;
 
-  declare type: string;
-
-  declare front: string;
-
-  declare back: string;
+  declare content: CardContent;
 
   declare audio: CreationOptional<string>;
 
@@ -39,16 +36,8 @@ Card.init({
   tags: {
     type: DataTypes.ARRAY(DataTypes.STRING),
   },
-  type: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  front: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  back: {
-    type: DataTypes.STRING,
+  content: {
+    type: DataTypes.JSONB,
     allowNull: false,
   },
   audio: {

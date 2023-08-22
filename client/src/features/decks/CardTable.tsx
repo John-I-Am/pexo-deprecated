@@ -65,10 +65,10 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
       sortedCards = [...cards].sort((a, b) => new Date(a.checkpointDate).getTime() - (new Date(b.checkpointDate).getTime()));
       break;
     case "cloze":
-      sortedCards = [...cards].sort((a, b) => a.type.localeCompare(b.type));
+      sortedCards = [...cards].sort((a, b) => a.content.type.localeCompare(b.content.type));
       break;
     case "classic":
-      sortedCards = [...cards].sort((a, b) => b.type.localeCompare(a.type));
+      sortedCards = [...cards].sort((a, b) => b.content.type.localeCompare(a.content.type));
       break;
     default:
       sortedCards = [...cards];
@@ -160,14 +160,21 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
         <tbody>
           {sortedCards.map((card: Card) => (
             <tr key={card.id}>
+              { card.content.type === "classic" && (
               <td>
                 <Text fw="700">Front:</Text>
-                <Text>{card.front}</Text>
+                <Text>{card.content.front}</Text>
                 <Text fw="700" pt="lg">Back:</Text>
-                <Text>{card.back}</Text>
+                <Text>{card.content.back}</Text>
               </td>
+              )}
+              { card.content.type === "cloze" && (
               <td>
-                <Text fs="italic">{`${card.type}`}</Text>
+                <Text fw="700">Cloze Card, expand to view</Text>
+              </td>
+              )}
+              <td>
+                <Text fs="italic">{`${card.content.type}`}</Text>
               </td>
               <td style={{ display: viewOnly ? "none" : "" }}>
                 <Text fw="700">{`Level: ${card.level}`}</Text>

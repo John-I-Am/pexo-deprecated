@@ -1,8 +1,11 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 import {
-  CardType,
+  CardContent,
+  CardContentClassic,
+  CardContentCloze,
   NewCard, NewUser, UpdatedCard, UpdatedDeck, UpdatedUser, UserCredentials, UserPreferences,
 } from "./types";
 
@@ -11,8 +14,6 @@ const isString = (text: unknown): text is string => typeof text === "string" || 
 const isArray = (array: unknown): array is Array<any> => Array.isArray(array);
 
 const isNumber = (value: unknown): value is number => typeof value === "number";
-
-// const isCardType = (value: any): value is CardType => value in CardType;
 
 const parseTextContent = (content: unknown): string => {
   const error = new Error("Incorrect type or missing text content");
@@ -44,14 +45,36 @@ const parseNumberContent = (content: unknown): number => {
   return content;
 };
 
-const parseCardType = (content: unknown): CardType => {
-  const error = new Error("Incorrect type or missing text content");
+const parseCardContent = (content: unknown): CardContent => {
+  const error = new Error("Incorrect type or missing card content");
   error.name = "ParseError";
-  if (!content || !isString(content) || (content !== "classic" && content !== "cloze")) {
+  if (!content) {
     throw error;
   }
 
-  return content;
+  let cardContent;
+
+  if ((content as CardContentClassic).type === "classic") {
+    const cardContentClassic: CardContentClassic = {
+      type: "classic",
+      front: parseTextContent((content as CardContentClassic).front),
+      back: parseTextContent((content as CardContentClassic).back),
+    };
+
+    cardContent = cardContentClassic;
+  }
+
+  if ((content as CardContentCloze).type === "cloze") {
+    const cardContentCloze: CardContentCloze = {
+      type: "cloze",
+      hint: parseTextContent((content as CardContentCloze).hint),
+      text: ((content as CardContentCloze).text),
+    };
+
+    cardContent = cardContentCloze;
+  }
+
+  return cardContent as CardContent;
 };
 
 export const toNewUser = (object: any): NewUser => {
@@ -89,11 +112,9 @@ export const toUserCredential = (object: any): UserCredentials => {
 
 export const toNewCard = (object: any): NewCard => {
   const newCard: NewCard = {
-    type: parseCardType(object.type),
     tags: object.tags !== undefined ? parseArrayContent(object.tags) : undefined,
     deckId: parseNumberContent(object.deckId),
-    front: parseTextContent(object.front),
-    back: parseTextContent(object.back),
+    content: parseCardContent(object.content),
     // audio: object.audio !== undefined ? parseTextContent(object.audio) : undefined,
     audio: object.audio ? parseTextContent(object.audio) : undefined,
     examples: object.examples !== undefined ? parseArrayContent(object.examples) : undefined,
@@ -104,11 +125,9 @@ export const toNewCard = (object: any): NewCard => {
 
 export const toUpdatedCard = (object: any): UpdatedCard => {
   const updatedCard: UpdatedCard = {
-    type: object.type !== undefined ? parseCardType(object.type) : undefined,
     tags: object.tags !== undefined ? parseArrayContent(object.tags) : undefined,
     deckId: object.deckId !== undefined ? parseNumberContent(object.deckId) : undefined,
-    front: object.front !== undefined ? parseTextContent(object.front) : undefined,
-    back: object.back !== undefined ? parseTextContent(object.back) : undefined,
+    content: object.content !== undefined ? parseCardContent(object.content) : undefined,
     level: object.level !== undefined ? parseNumberContent(object.level) : undefined,
     audio: object.audio ? parseTextContent(object.audio) : "",
     examples: object.examples !== undefined ? parseArrayContent(object.examples) : undefined,

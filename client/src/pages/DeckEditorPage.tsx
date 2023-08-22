@@ -13,7 +13,7 @@ const DeckEditorPage = (): ReactElement => {
   const cardsToShow: Card[] | any[] = filter === ""
     ? activeDeck.cards ?? []
     : activeDeck.cards?.filter(
-      (cards) => cards.front.toLowerCase().includes(filter.toLowerCase()),
+      (cards) => (cards.content as any).front.toLowerCase().includes(filter.toLowerCase()),
     ) ?? [];
 
   return (

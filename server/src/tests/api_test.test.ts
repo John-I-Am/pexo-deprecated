@@ -202,7 +202,7 @@ describe("what happens when there is initally one user", () => {
       );
     });
 
-    describe("Where there is initially one deck with one card", () => {
+    describe("Where there is initially one deck with one card of each types", () => {
       beforeEach(async () => {
         await Deck.sync({ force: true });
         await Card.sync({ force: true });
@@ -211,12 +211,18 @@ describe("what happens when there is initally one user", () => {
           .post("/api/decks")
           .set("Authorization", `bearer ${token}`);
 
-        const newCard: any = {
-          type: "classic",
+        const newCardClassic: NewCard = {
           tags: ["tag1"],
           deckId: +(response.body.id),
-          front: "front of card",
-          back: "back of card",
+          content: { type: "classic", front: "card front", back: "card back" },
+          audio: "audioURL",
+          examples: ["blahblah"],
+        };
+
+        const newCardCloze: NewCard = {
+          tags: ["tag2"],
+          deckId: +(response.body.id),
+          content: { type: "cloze", hint: "cloze hint", text: [["hello", false], ["world", true]] as any },
           audio: "audioURL",
           examples: ["blahblah"],
         };
@@ -224,7 +230,8 @@ describe("what happens when there is initally one user", () => {
         await api
           .post("/api/cards")
           .set("Authorization", `bearer ${token}`)
-          .send(newCard);
+          .send(newCardClassic)
+          .send(newCardCloze);
       });
 
       test("New deck can be created", async () => {
@@ -290,16 +297,14 @@ describe("what happens when there is initally one user", () => {
         expect(ids).not.toContain(deckToDelete.id);
       });
 
-      test("Card can be created", async () => {
+      test("classic card can be created", async () => {
         const decksAtStart = await helper.decksInDb();
         const cardsAtStart = await helper.cardsInDb();
 
         const newCard: NewCard = {
-          type: "classic",
           tags: ["fun"],
           deckId: decksAtStart[0].id,
-          front: "this is front of card",
-          back: "this is back of card",
+          content: { type: "classic", front: "classic front", back: "classic back" },
           audio: "km",
           examples: ["example"],
         };
@@ -313,8 +318,33 @@ describe("what happens when there is initally one user", () => {
         const cardsAtEnd = await helper.cardsInDb();
         expect(cardsAtEnd).toHaveLength(cardsAtStart.length + 1);
 
-        const contents = cardsAtEnd.map((card: any) => card.front);
-        expect(contents).toContainEqual("this is front of card");
+        const contents = cardsAtEnd.map((card: any) => card.content);
+        expect(contents).toContainEqual({ type: "classic", front: "classic front", back: "classic back" });
+      });
+
+      test("cloze card can be created", async () => {
+        const decksAtStart = await helper.decksInDb();
+        const cardsAtStart = await helper.cardsInDb();
+
+        const newCard: NewCard = {
+          tags: ["fun"],
+          deckId: decksAtStart[0].id,
+          content: { type: "cloze", hint: "say hi", text: [["hello", false], ["world", true]] as any },
+          audio: "audio test",
+          examples: ["example"],
+        };
+
+        await api
+          .post("/api/cards")
+          .set("Authorization", `bearer ${token}`)
+          .send(newCard)
+          .expect(200);
+
+        const cardsAtEnd = await helper.cardsInDb();
+        expect(cardsAtEnd).toHaveLength(cardsAtStart.length + 1);
+
+        const contents = cardsAtEnd.map((card: any) => card.content);
+        expect(contents).toContainEqual({ type: "cloze", hint: "say hi", text: [["hello", false], ["world", true]] as any });
       });
 
       test("All cards can be returned", async () => {
@@ -340,7 +370,7 @@ describe("what happens when there is initally one user", () => {
       test("Card can be updated", async () => {
         const cardsAtStart = await helper.cardsInDb();
         const newCard = {
-          front: "updated front",
+          content: { type: "classic", front: "new front", back: "new back" },
         };
 
         await api

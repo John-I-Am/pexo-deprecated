@@ -43,7 +43,7 @@ const CardToolbar = ({
             {`Level: ${card.level}`}
           </Text>
           <Text fs="italic" fz="sm">
-            {card.type}
+            {card.content.type}
           </Text>
         </Group>
 
@@ -57,16 +57,16 @@ const CardToolbar = ({
           </ActionIcon>
 
           <Group display={checked ? "none" : "flex"}>
-            <ActionIcon size="lg" color="green" variant="filled" onClick={() => handleCorrect()} display={card.type !== "classic" ? "none" : ""}>
+            <ActionIcon size="lg" color="green" variant="filled" onClick={() => handleCorrect()} display={card.content.type !== "classic" ? "none" : ""}>
               <IconCheck />
             </ActionIcon>
 
-            <ActionIcon size="lg" color="red" variant="filled" disabled={checked} onClick={() => handleIncorrect()} display={card.type !== "classic" ? "none" : ""}>
+            <ActionIcon size="lg" color="red" variant="filled" disabled={checked} onClick={() => handleIncorrect()} display={card.content.type !== "classic" ? "none" : ""}>
               <IconX />
             </ActionIcon>
           </Group>
 
-          <ActionIcon size="lg" color="blue" variant="filled" display={card.type === "cloze" ? "" : "none"} onClick={() => handleGuessed()}>
+          <ActionIcon size="lg" color="blue" variant="filled" display={card.content.type === "cloze" ? "" : "none"} onClick={() => handleGuessed()}>
             <IconChevronRight />
           </ActionIcon>
         </Group>

@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-shadow */
 export interface DecodedToken {
   userId: number,
 }
@@ -26,7 +28,29 @@ export interface NewUser {
   password: string,
 }
 
-export type CardType = "classic" | "cloze"
+export enum CardType {
+  Classic = "classic",
+  Cloze = "cloze",
+}
+
+export interface CardContentClassic {
+  type: "classic";
+  front: string;
+  back: string;
+}
+
+export interface ClozeEntry {
+  word: string;
+  hidden: boolean;
+}
+
+export interface CardContentCloze {
+  type: "cloze";
+  hint: string | undefined;
+  text: Array<Array<ClozeEntry>>;
+}
+
+export type CardContent = CardContentClassic | CardContentCloze
 
 export interface DictionaryEntry {
   definition: string,
@@ -36,10 +60,8 @@ export interface DictionaryEntry {
 
 export interface NewCard {
   deckId: number,
-  type: CardType,
   tags: Array<string> | undefined,
-  front: string,
-  back: string,
+  content: CardContent,
   audio: string | undefined
   examples: Array<string> | undefined,
 }
@@ -75,11 +97,9 @@ export interface UpdatedUser {
 }
 
 export interface UpdatedCard {
-  type: CardType | undefined,
   tags: Array<string> | undefined,
   deckId: number | undefined,
-  front: string | undefined,
-  back: string | undefined,
+  content: CardContent | undefined,
   level: number | undefined,
   audio: string| undefined,
   examples: Array<string> | undefined,

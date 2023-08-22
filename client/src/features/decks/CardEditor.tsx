@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,7 +8,9 @@ import {
   Textarea, TextInput, Button, Badge, Group, Stack, ActionIcon, Text,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { Card, CardType, NewCard } from "types";
+import {
+  Card, CardContentClassic, CardType, NewCard,
+} from "types";
 
 import {
   Icon360, IconPlus, IconUnderline,
@@ -27,7 +31,6 @@ type FormValueCard = {
   front: string;
   back: string;
   examples: string;
-  type: CardType;
   audio: string;
 }
 
@@ -39,7 +42,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   const activeDeckId = useAppSelector((state: any) => state.decks.activeDeckId);
   const [tags, setTags] = useState(card ? card.tags : []);
 
-  const [mode, setMode] = useState<CardType>(card?.type || "classic");
+  const [mode, setMode] = useState<any>(card?.content.type || CardType.Classic);
 
   const [createCard, { isLoading: isLoadingCreate }] = useCreateCardMutation();
   const [updateCard, { isLoading: isLoadingUpdate }] = useUpdateCardMutation();
@@ -83,18 +86,17 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
 
   const handleCreateCard = async (data: FormValueCard): Promise<void> => {
     const newCard: NewCard = {
-      ...data,
-      type: mode,
+      content: { type: mode, front: data.front, back: data.back },
       examples: data?.examples ? data.examples.split("") : [], // temporary solution for examples needing to be in array. need to refactor backend
       tags,
       deckId: activeDeckId,
+      audio: "",
     };
 
     if (card) {
       const updatedCard = {
         ...card,
-        ...data,
-        type: mode,
+        content: { ...data, type: mode },
         level: undefined,
         examples: data?.examples ? data.examples.split("") : [], // temporary solution for examples needing to be in array. need to refactor backend
         tags,
@@ -202,7 +204,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
       </Group>
 
       <form onSubmit={handleSubmitCard(handleCreateCard)}>
-        {mode === "classic" && (
+        {mode === "classic" as any && (
         <Group grow>
           <Textarea
             id="input_front"
@@ -210,7 +212,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
             placeholder="Front of card"
             label="Front"
             error={errorsCard.front?.message}
-            defaultValue={card?.front}
+            defaultValue={card?.content.front}
             {...registerCard("front", {
               required: "required",
               maxLength: {
@@ -231,7 +233,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
                 message: "Maximum characters of 254.",
               },
             })}
-            defaultValue={card?.back}
+            defaultValue={card?.content.back}
             label="Back"
             error={errorsCard.back?.message}
           />
@@ -239,7 +241,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
         )}
 
         {/* / TODO: implement custom editor for cloze type. currently same as classic  */}
-        {mode === "cloze" && (
+        {/* {mode === "cloze" && (
         <Group grow>
           <Textarea
             id="input_front"
@@ -247,7 +249,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
             placeholder="Front of card"
             label="Front"
             error={errorsCard.front?.message}
-            defaultValue={card?.front}
+            defaultValue={card?.content.front}
             {...registerCard("front", {
               required: "required",
               maxLength: {
@@ -273,7 +275,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
             error={errorsCard.back?.message}
           />
         </Group>
-        )}
+        )} */}
 
         <Textarea
           id="input_notes"
