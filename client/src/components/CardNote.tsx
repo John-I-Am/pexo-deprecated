@@ -1,14 +1,13 @@
-import { Container, Title } from "@mantine/core";
+/* eslint-disable import/no-extraneous-dependencies */
+import { Container, Text } from "@mantine/core";
 import { ReactElement } from "react";
+import parser from "html-react-parser";
 
-const CardNote = ({ notes }: {notes: string[] | undefined}): ReactElement => {
+const CardNote = ({ notes = "" }: {notes: string | undefined}): ReactElement => {
   console.log("");
   return (
     <Container>
-      <Title order={2} c="blue">Examples</Title>
-      {notes?.map((examples?: any) => (
-        <p key={Date.now() * Math.random()}>{examples}</p>
-      ))}
+      <Text>{parser(notes)}</Text>
     </Container>
   );
 };

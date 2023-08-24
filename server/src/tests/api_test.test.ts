@@ -216,7 +216,7 @@ describe("what happens when there is initally one user", () => {
           deckId: +(response.body.id),
           content: { type: "classic", front: "card front", back: "card back" },
           audio: "audioURL",
-          examples: ["blahblah"],
+          notes: "this is my classic note",
         };
 
         const newCardCloze: NewCard = {
@@ -224,7 +224,7 @@ describe("what happens when there is initally one user", () => {
           deckId: +(response.body.id),
           content: { type: "cloze", hint: "cloze hint", text: [["hello", false], ["world", true]] as any },
           audio: "audioURL",
-          examples: ["blahblah"],
+          notes: "this is my cloze note",
         };
 
         await api
@@ -306,7 +306,7 @@ describe("what happens when there is initally one user", () => {
           deckId: decksAtStart[0].id,
           content: { type: "classic", front: "classic front", back: "classic back" },
           audio: "km",
-          examples: ["example"],
+          notes: "this is my new note",
         };
 
         await api
@@ -331,7 +331,7 @@ describe("what happens when there is initally one user", () => {
           deckId: decksAtStart[0].id,
           content: { type: "cloze", hint: "say hi", text: [["hello", false], ["world", true]] as any },
           audio: "audio test",
-          examples: ["example"],
+          notes: "this is my new note",
         };
 
         await api

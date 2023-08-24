@@ -20,7 +20,7 @@ class Card extends Model<InferAttributes<Card>, InferCreationAttributes<Card>> {
 
   declare audio: CreationOptional<string>;
 
-  declare examples: CreationOptional<Array<string>>;
+  declare notes: CreationOptional<string>;
 
   declare level: number;
 
@@ -43,8 +43,8 @@ Card.init({
   audio: {
     type: DataTypes.STRING,
   },
-  examples: {
-    type: DataTypes.ARRAY(DataTypes.STRING),
+  notes: {
+    type: DataTypes.STRING,
   },
   level: {
     type: DataTypes.INTEGER,

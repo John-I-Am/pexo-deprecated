@@ -63,7 +63,7 @@ export interface NewCard {
   tags: Array<string> | undefined,
   content: CardContent,
   audio: string | undefined
-  examples: Array<string> | undefined,
+  notes: string | undefined,
 }
 
 export interface Card extends NewCard {
@@ -102,7 +102,7 @@ export interface UpdatedCard {
   content: CardContent | undefined,
   level: number | undefined,
   audio: string| undefined,
-  examples: Array<string> | undefined,
+  notes: string | undefined,
 }
 
 export interface UpdatedDeck {

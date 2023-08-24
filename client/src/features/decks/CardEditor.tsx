@@ -30,7 +30,7 @@ type FormValueTag = {
 type FormValueCard = {
   front: string;
   back: string;
-  examples: string;
+  notes: string;
   audio: string;
 }
 
@@ -72,7 +72,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
     {
       front: (card?.content as any)?.front || "",
       back: (card?.content as any)?.back || "",
-      examples: (card?.examples as any) || "",
+      notes: (card?.notes as any) || "",
     },
   });
 
@@ -94,7 +94,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
       setValueCard("front", word);
       setValueCard("back", entry.definition);
       setValueCard("audio", (entry.pronunciation));
-      setValueCard("examples", entry?.examples?.join("\n"));
+      setValueCard("notes", entry?.examples?.join("\n"));
     } catch (e) {
       setError("word", {
         type: "manual",
@@ -106,7 +106,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   const handleCreateCard = async (data: FormValueCard): Promise<void> => {
     const newCard: NewCard = {
       content: { type: mode, front: data.front, back: data.back },
-      examples: data?.examples ? data.examples.split("") : [], // temporary solution for examples needing to be in array. need to refactor backend
+      notes: data?.notes ? data.notes : "",
       tags,
       deckId: activeDeckId,
       audio: "",
@@ -117,7 +117,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
         ...card,
         content: { ...data, type: mode },
         level: undefined,
-        examples: data?.examples ? data.examples.split("") : [], // temporary solution for examples needing to be in array. need to refactor backend
+        notes: data?.notes ? data.notes : "",
         tags,
       };
 
@@ -319,7 +319,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
                   message: "Maximum characters of 254.",
                 },
               }}
-              name="examples"
+              name="notes"
               render={({
                 field: {
                   onChange,
@@ -328,12 +328,13 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
               }) => (
                 <TextEditor
                   label="Notes"
+                  type="classic"
                   content={value}
                   onChange={onChange}
                 />
               )}
             />
-            {errorsCard.examples?.message}
+            {errorsCard.notes?.message}
           </Stack>
 
           <TextInput

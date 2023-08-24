@@ -117,7 +117,7 @@ export const toNewCard = (object: any): NewCard => {
     content: parseCardContent(object.content),
     // audio: object.audio !== undefined ? parseTextContent(object.audio) : undefined,
     audio: object.audio ? parseTextContent(object.audio) : undefined,
-    examples: object.examples !== undefined ? parseArrayContent(object.examples) : undefined,
+    notes: object.notes !== undefined ? parseTextContent(object.notes) : undefined,
   };
 
   return newCard;
@@ -130,7 +130,7 @@ export const toUpdatedCard = (object: any): UpdatedCard => {
     content: object.content !== undefined ? parseCardContent(object.content) : undefined,
     level: object.level !== undefined ? parseNumberContent(object.level) : undefined,
     audio: object.audio ? parseTextContent(object.audio) : "",
-    examples: object.examples !== undefined ? parseArrayContent(object.examples) : undefined,
+    notes: object.notes !== undefined ? parseTextContent(object.notes) : undefined,
   };
 
   return updatedCard;

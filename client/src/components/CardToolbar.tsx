@@ -26,8 +26,18 @@ const CardToolbar = ({
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Notes">
-        <CardNote notes={card?.examples} />
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Notes"
+        zIndex={1001}
+        styles={() => ({
+          title: {
+            fontWeight: 700,
+          },
+        })}
+      >
+        <CardNote notes={card?.notes} />
       </Modal>
       <Group
         px="sm"
