@@ -30,6 +30,7 @@ type FormValueTag = {
 type FormValueCard = {
   front: string;
   back: string;
+  cloze: Array<any>;
   notes: string;
   audio: string;
 }
@@ -293,7 +294,7 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
                   message: "Maximum characters of 254.",
                 },
               }}
-              name="front"
+              name="cloze"
               render={({
                 field: {
                   onChange,
