@@ -1,6 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import {
   Container, createStyles, Stack, Text,
 } from "@mantine/core";
+import parser from "html-react-parser";
 import { ReactElement, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
@@ -53,10 +55,10 @@ const CardContentClassic = ({ front, back }: CardContentClassicProps): ReactElem
       onClick={() => setFlipped(!flipped)}
     >
       <Stack justify="center" align="center" className={classes.cardContent}>
-        <Text className={classes.textContent}>{front}</Text>
+        <Text className={classes.textContent}>{parser(front)}</Text>
       </Stack>
       <Stack justify="center" align="center" className={classes.cardContent} sx={{ transform: "rotateY(180deg)" }}>
-        <Text className={classes.textContent}>{back}</Text>
+        <Text className={classes.textContent}>{parser(back)}</Text>
       </Stack>
     </Container>
   );

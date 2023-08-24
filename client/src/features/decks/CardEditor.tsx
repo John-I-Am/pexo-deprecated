@@ -1,23 +1,23 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable max-len */
 /* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import {
-  Textarea, TextInput, Button, Badge, Group, Stack, ActionIcon, Text,
+  TextInput, Button, Badge, Group, Stack, ActionIcon, Text,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import {
-  Card, CardContentClassic, CardType, NewCard,
-} from "types";
+import { Card, NewCard } from "types";
 
 import {
   Icon360, IconPlus, IconUnderline,
 } from "@tabler/icons-react";
+
+import TextEditor from "../../components/TextEditor";
 import dictionaryService from "../../services/dictionary";
 import { useAppSelector } from "../../hooks/hooks";
 import { useCreateCardMutation, useUpdateCardMutation } from "../api/apiSlice";
+
+/* VERY MESSY FILE, REFACTOR NEEDED */
 
 type FormValueWord = {
   word: string
@@ -42,10 +42,17 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   const activeDeckId = useAppSelector((state: any) => state.decks.activeDeckId);
   const [tags, setTags] = useState(card ? card.tags : []);
 
-  const [mode, setMode] = useState<any>(card?.content.type || CardType.Classic);
+  const [mode, setMode] = useState<any>(card?.content.type || "classic");
 
   const [createCard, { isLoading: isLoadingCreate }] = useCreateCardMutation();
   const [updateCard, { isLoading: isLoadingUpdate }] = useUpdateCardMutation();
+
+  // react-hook-form controller value (for tiptap editor) can not and should not
+  // (according to RHF docs) be changed via setValue api. So the below is a workaround;
+  // values will be passed to editor when
+  // user generates values from handleSearchWord function
+  const [autofillFront, setAutofillFront] = useState<any>("");
+  const [autofillBack, setAutofillBack] = useState<any>("");
 
   const {
     register,
@@ -59,7 +66,15 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
     handleSubmit: handleSubmitCard,
     setValue: setValueCard,
     formState: { errors: errorsCard },
-  } = useForm<FormValueCard>();
+    control: controlCard,
+  } = useForm<FormValueCard>({
+    defaultValues:
+    {
+      front: (card?.content as any)?.front || "",
+      back: (card?.content as any)?.back || "",
+      examples: (card?.examples as any) || "",
+    },
+  });
 
   const {
     register: registerTag,
@@ -72,6 +87,10 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   const handleSearchWord = async ({ word }: { word: string}): Promise<void> => {
     try {
       const entry = await dictionaryService.define(word);
+      // below code required to programmatically change editor content
+      setAutofillFront(word);
+      setAutofillBack(entry.definition);
+      // below code still required for RHF to know content been changed
       setValueCard("front", word);
       setValueCard("back", entry.definition);
       setValueCard("audio", (entry.pronunciation));
@@ -204,105 +223,132 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
       </Group>
 
       <form onSubmit={handleSubmitCard(handleCreateCard)}>
-        {mode === "classic" as any && (
-        <Group grow>
-          <Textarea
-            id="input_front"
-            autosize
-            placeholder="Front of card"
-            label="Front"
-            error={errorsCard.front?.message}
-            defaultValue={card?.content.front}
-            {...registerCard("front", {
-              required: "required",
-              maxLength: {
-                value: 254,
-                message: "Maximum characters of 254.",
-              },
-            })}
+        <Stack spacing="lg">
+          {mode === "classic" as any && (
+          <Stack spacing="lg">
+            <Controller
+              control={controlCard}
+              rules={{
+                required: "required",
+                maxLength: {
+                  value: 254,
+                  message: "Maximum characters of 254.",
+                },
+              }}
+              name="front"
+              render={({
+                field: {
+                  onChange,
+                  value,
+                },
+              }) => (
+                <TextEditor
+                  label="Front"
+                  type="classic"
+                  content={value}
+                  onChange={onChange}
+                  autofill={autofillFront}
+                />
+              )}
+            />
+            {errorsCard.front && <Text fz="xs" c="red">{errorsCard.front.message}</Text>}
+
+            <Controller
+              control={controlCard}
+              rules={{
+                required: "required",
+                maxLength: {
+                  value: 254,
+                  message: "Maximum characters of 254.",
+                },
+              }}
+              name="back"
+              render={({
+                field: {
+                  onChange,
+                  value,
+                },
+              }) => (
+                <TextEditor
+                  label="Back"
+                  type="classic"
+                  content={value}
+                  onChange={onChange}
+                  autofill={autofillBack}
+                />
+              )}
+            />
+            {errorsCard.back && <Text fz="xs" c="red">{errorsCard.back.message}</Text>}
+          </Stack>
+          )}
+
+          {mode === "cloze" && (
+          <Stack>
+            <Controller
+              control={controlCard}
+              rules={{
+                required: "required",
+                maxLength: {
+                  value: 254,
+                  message: "Maximum characters of 254.",
+                },
+              }}
+              name="front"
+              render={({
+                field: {
+                  onChange,
+                },
+              }) => (
+                <TextEditor
+                  label="Cloze content"
+                  type="cloze"
+                  content={(card?.content as any)?.front || ""}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </Stack>
+          )}
+
+          <Stack>
+            <Controller
+              control={controlCard}
+              rules={{
+                maxLength: {
+                  value: 254,
+                  message: "Maximum characters of 254.",
+                },
+              }}
+              name="examples"
+              render={({
+                field: {
+                  onChange,
+                  value,
+                },
+              }) => (
+                <TextEditor
+                  label="Notes"
+                  content={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+            {errorsCard.examples?.message}
+          </Stack>
+
+          <TextInput
+            {...registerCard("audio")}
+            placeholder="URL"
+            defaultValue={card?.audio}
+            label="Audio Url"
+            error={errorsCard.audio?.message}
+            styles={(theme) => ({ label: { fontSize: theme.fontSizes.xs } })}
           />
 
-          <Textarea
-            id="input_back"
-            autosize
-            placeholder="Back of card"
-            {...registerCard("back", {
-              required: "required",
-              maxLength: {
-                value: 254,
-                message: "Maximum characters of 254.",
-              },
-            })}
-            defaultValue={card?.content.back}
-            label="Back"
-            error={errorsCard.back?.message}
-          />
-        </Group>
-        )}
-
-        {/* / TODO: implement custom editor for cloze type. currently same as classic  */}
-        {/* {mode === "cloze" && (
-        <Group grow>
-          <Textarea
-            id="input_front"
-            autosize
-            placeholder="Front of card"
-            label="Front"
-            error={errorsCard.front?.message}
-            defaultValue={card?.content.front}
-            {...registerCard("front", {
-              required: "required",
-              maxLength: {
-                value: 254,
-                message: "Maximum characters of 254.",
-              },
-            })}
-          />
-
-          <Textarea
-            id="input_back"
-            autosize
-            placeholder="Back of card"
-            {...registerCard("back", {
-              required: "required",
-              maxLength: {
-                value: 254,
-                message: "Maximum characters of 254.",
-              },
-            })}
-            defaultValue={card?.back}
-            label="Back"
-            error={errorsCard.back?.message}
-          />
-        </Group>
-        )} */}
-
-        <Textarea
-          id="input_notes"
-          autosize
-          placeholder="Card notes..."
-          label="Notes"
-          error={errorsCard.examples?.message}
-          defaultValue={card?.examples}
-          {...registerCard("examples", {
-            maxLength: {
-              value: 254,
-              message: "Maximum characters of 254.",
-            },
-          })}
-        />
-
-        <TextInput
-          {...registerCard("audio")}
-          placeholder="URL"
-          defaultValue={card?.audio}
-          label="Audio Url"
-          error={errorsCard.audio?.message}
-        />
-
-        <Button loading={isLoadingCreate || isLoadingUpdate} mt="md" id="create" type="submit">
-          {card ? "Edit" : "Create"}
-        </Button>
+          <Button loading={isLoadingCreate || isLoadingUpdate} mt="md" id="create" type="submit">
+            {card ? "Edit" : "Create"}
+          </Button>
+        </Stack>
       </form>
     </Stack>
   );

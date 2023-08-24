@@ -2,6 +2,8 @@ import { ReactElement, useState } from "react";
 import {
   createStyles, Table, Modal, Menu, Group, Text, ActionIcon,
 } from "@mantine/core";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import parser from "html-react-parser";
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import { Card } from "types";
@@ -163,9 +165,9 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
               { card.content.type === "classic" && (
               <td>
                 <Text fw="700">Front:</Text>
-                <Text>{card.content.front}</Text>
+                <Text>{parser(card.content.front)}</Text>
                 <Text fw="700" pt="lg">Back:</Text>
-                <Text>{card.content.back}</Text>
+                <Text>{parser(card.content.back)}</Text>
               </td>
               )}
               { card.content.type === "cloze" && (

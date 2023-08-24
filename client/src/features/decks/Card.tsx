@@ -49,7 +49,7 @@ const Card = ({ cardToStudy }: any): ReactElement => {
         />
       );
     }
-    return <CardContentClassic front={cardToStudy.front} back={cardToStudy.back} />;
+    return <CardContentClassic front={cardToStudy.content.front} back={cardToStudy.content.back} />;
   };
 
   return (
