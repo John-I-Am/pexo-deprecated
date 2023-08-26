@@ -1,42 +1,15 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable arrow-body-style */
 import { Stack, Text } from "@mantine/core";
-import { RichTextEditor, Link } from "@mantine/tiptap";
-import Highlight from "@tiptap/extension-highlight";
-import TextAlign from "@tiptap/extension-text-align";
-import Underline from "@tiptap/extension-underline";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
+import { RichTextEditor } from "@mantine/tiptap";
 
 const TextEditor = ({
-  label, type, content, onChange, autofill,
+  label, type, editor,
 }: any) => {
-  const textEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Link,
-      Highlight,
-    ],
-    content,
-    onUpdate({ editor }) {
-      onChange(editor.getHTML());
-    },
-  });
-
-  // forces content to reforce when user uses handleSearchWord function from CardEditor
-  useEffect(() => {
-    textEditor?.commands.setContent(autofill);
-  }, [autofill]);
-
   return (
     <Stack spacing="xs">
       <Text fz="xs" fw={500}>{label}</Text>
       <RichTextEditor
-        editor={textEditor}
+        editor={editor}
       >
         {type === "classic" && (
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
@@ -85,6 +58,7 @@ const TextEditor = ({
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Highlight />
           </RichTextEditor.ControlsGroup>
+          <Text fz="xs">Highlight cloze text</Text>
         </RichTextEditor.Toolbar>
         )}
 

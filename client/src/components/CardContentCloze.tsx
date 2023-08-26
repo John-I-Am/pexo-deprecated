@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import {
-  createStyles, Input, Stack, Text,
+  createStyles, Input, Stack, Text, Group,
 } from "@mantine/core";
+import parser from "html-react-parser";
 import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -17,7 +18,6 @@ const useStyles = createStyles((theme) => ({
       color: theme.colorScheme === "dark" ? "white" : "black",
       border: "none",
       borderBottom: "1px solid grey",
-      fontSize: "2rem",
       textAlign: "center",
     },
   },
@@ -59,24 +59,26 @@ const CardContentCloze = (
 
   return (
     <Stack justify="center" h="100%" spacing="lg" align="center">
-      <Text>{content?.hint}</Text>
-      {content.text.map((element: any, index: any) => {
-        if (element[1] === true) {
-          return (
-            <form onSubmit={handleSubmit((data) => handleGuess(data, index))}>
-              <Input
-                readOnly={guessed}
-                className={cx(classes.default, {
-                  [classes.correct]: guessed && isCorrect,
-                  [classes.incorrect]: guessed && !isCorrect,
-                })}
-                {...register(`cloze${index}`)}
-              />
-            </form>
-          );
-        }
-        return <Text>{element[0]}</Text>;
-      })}
+      <Text>{parser(content?.hint)}</Text>
+      <Group>
+        {content.text.map((element: any, index: any) => {
+          if (element[1] === true) {
+            return (
+              <form onSubmit={handleSubmit((data) => handleGuess(data, index))}>
+                <Input
+                  readOnly={guessed}
+                  className={cx(classes.default, {
+                    [classes.correct]: guessed && isCorrect,
+                    [classes.incorrect]: guessed && !isCorrect,
+                  })}
+                  {...register(`cloze${index}`)}
+                />
+              </form>
+            );
+          }
+          return <Text>{element[0]}</Text>;
+        })}
+      </Group>
     </Stack>
   );
 };

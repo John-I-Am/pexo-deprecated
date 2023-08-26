@@ -172,7 +172,7 @@ const CardTable = ({ cards, viewOnly }: CardTableProps): ReactElement => {
               )}
               { card.content.type === "cloze" && (
               <td>
-                <Text fw="700">{card.content.hint}</Text>
+                <Text fw="700">{parser(card.content.hint || "")}</Text>
               </td>
               )}
               <td>

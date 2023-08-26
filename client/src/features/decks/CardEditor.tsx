@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-props-no-spreading */
 import { ReactElement, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import {
   TextInput, Button, Badge, Group, Stack, ActionIcon, Text,
@@ -12,12 +13,16 @@ import {
   Icon360, IconPlus, IconUnderline,
 } from "@tabler/icons-react";
 
-import TextEditor from "../../components/TextEditor";
-import dictionaryService from "../../services/dictionary";
-import { useAppSelector } from "../../hooks/hooks";
+import Underline from "@tiptap/extension-underline";
+import StarterKit from "@tiptap/starter-kit";
+import Link from "@tiptap/extension-link";
+import Highlight from "@tiptap/extension-highlight";
+import TextAlign from "@tiptap/extension-text-align";
+import { useEditor } from "@tiptap/react";
 import { useCreateCardMutation, useUpdateCardMutation } from "../api/apiSlice";
-
-/* VERY MESSY FILE, REFACTOR NEEDED */
+import { useAppSelector } from "../../hooks/hooks";
+import dictionaryService from "../../services/dictionary";
+import TextEditor from "../../components/TextEditor";
 
 type FormValueWord = {
   word: string
@@ -28,10 +33,6 @@ type FormValueTag = {
 }
 
 type FormValueCard = {
-  front: string;
-  back: string;
-  cloze: Array<any>;
-  notes: string;
   audio: string;
 }
 
@@ -48,13 +49,6 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   const [createCard, { isLoading: isLoadingCreate }] = useCreateCardMutation();
   const [updateCard, { isLoading: isLoadingUpdate }] = useUpdateCardMutation();
 
-  // react-hook-form controller value (for tiptap editor) can not and should not
-  // (according to RHF docs) be changed via setValue api. So the below is a workaround;
-  // values will be passed to editor when
-  // user generates values from handleSearchWord function
-  const [autofillFront, setAutofillFront] = useState<any>("");
-  const [autofillBack, setAutofillBack] = useState<any>("");
-
   const {
     register,
     handleSubmit,
@@ -67,13 +61,56 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
     handleSubmit: handleSubmitCard,
     setValue: setValueCard,
     formState: { errors: errorsCard },
-    control: controlCard,
-  } = useForm<FormValueCard>({
-    defaultValues:
-    {
-      front: (card?.content as any)?.front || "",
-      back: (card?.content as any)?.back || "",
-      notes: (card?.notes as any) || "",
+  } = useForm<FormValueCard>();
+
+  const editorExtensions = [
+    StarterKit,
+    Underline,
+    TextAlign.configure({ types: ["heading", "paragraph"] }),
+    Link,
+    Highlight,
+  ];
+
+  const textEditorFront = useEditor({
+    extensions: editorExtensions,
+    content: (card?.content as any)?.front || (card?.content as any)?.hint || "",
+    onUpdate({ editor }) {
+      editor.getHTML();
+    },
+  });
+
+  // Remap database data into JSON that can be used by editor
+  let cardClozeReconstructed: any;
+  if (card?.content.type === "cloze") {
+    cardClozeReconstructed = card.content.text.map((ele) => {
+      if (ele[1]) {
+        return ({ type: "text", text: ele[0], marks: [{ type: "highlight" }] });
+      }
+      return ({ type: "text", text: ele[0] });
+    });
+  }
+
+  const textEditorBack = useEditor({
+    extensions: editorExtensions,
+    content: (card?.content as any)?.back || {
+      type: "doc",
+      content: [
+        {
+          type: "paragraph",
+          content: cardClozeReconstructed,
+        },
+      ],
+    },
+    onUpdate({ editor }) {
+      editor.getHTML();
+    },
+  });
+
+  const textEditorNote = useEditor({
+    extensions: editorExtensions,
+    content: (card?.notes as any) || "",
+    onUpdate({ editor }) {
+      editor.getHTML();
     },
   });
 
@@ -88,14 +125,10 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   const handleSearchWord = async ({ word }: { word: string}): Promise<void> => {
     try {
       const entry = await dictionaryService.define(word);
-      // below code required to programmatically change editor content
-      setAutofillFront(word);
-      setAutofillBack(entry.definition);
-      // below code still required for RHF to know content been changed
-      setValueCard("front", word);
-      setValueCard("back", entry.definition);
+      textEditorFront?.commands.setContent(word);
+      textEditorBack?.commands.setContent(entry.definition);
+      textEditorNote?.commands.setContent(entry.examples);
       setValueCard("audio", (entry.pronunciation));
-      setValueCard("notes", entry?.examples?.join("\n"));
     } catch (e) {
       setError("word", {
         type: "manual",
@@ -105,9 +138,42 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
   };
 
   const handleCreateCard = async (data: FormValueCard): Promise<void> => {
+    if (textEditorFront?.isEmpty) {
+      textEditorFront?.commands.focus();
+      return;
+    }
+
+    if (textEditorBack?.isEmpty) {
+      textEditorBack?.commands.focus();
+      return;
+    }
+
+    let content: any;
+
+    if (mode === "classic") {
+      content = {
+        type: mode,
+        front: textEditorFront?.getHTML() as any,
+        back: textEditorBack?.getHTML() as any,
+      };
+    }
+
+    if (mode === "cloze") {
+      const editorOutput = textEditorBack?.getJSON()?.content?.[0].content;
+      const text: any = [];
+      editorOutput?.forEach((ele: any) => {
+        if (ele.marks !== undefined) {
+          text.push([ele.text, true]);
+        } else {
+          text.push([ele.text, false]);
+        }
+      });
+      content = { type: mode, hint: textEditorFront?.getHTML() as any, text };
+    }
+
     const newCard: NewCard = {
-      content: { type: mode, front: data.front, back: data.back },
-      notes: data?.notes ? data.notes : "",
+      content,
+      notes: textEditorNote?.getHTML() as any,
       tags,
       deckId: activeDeckId,
       audio: "",
@@ -116,9 +182,9 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
     if (card) {
       const updatedCard = {
         ...card,
-        content: { ...data, type: mode },
+        content,
         level: undefined,
-        notes: data?.notes ? data.notes : "",
+        notes: textEditorNote?.getHTML() as any,
         tags,
       };
 
@@ -130,8 +196,6 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
     } else {
       await createCard(newCard);
       setTags([]);
-      setValueCard("front", "");
-      setValueCard("back", "");
       setValueCard("audio", "");
       showNotification({
         title: "Card Created",
@@ -166,7 +230,19 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
         </Stack>
 
         <Stack spacing="sm" align="center">
-          <ActionIcon size="5rem" color="blue" variant={mode === "cloze" ? "filled" : "light"} onClick={() => setMode("cloze")}>
+          <ActionIcon
+            size="5rem"
+            color="blue"
+            variant={mode === "cloze" ? "filled" : "light"}
+            onClick={() => {
+              setMode("cloze");
+              textEditorBack?.chain() // removes all formatting when clicked; inconsistent
+                .focus()
+                .clearNodes()
+                .unsetAllMarks()
+                .run();
+            }}
+          >
             <IconUnderline size="2rem" />
           </ActionIcon>
           <Text fz="sm">Cloze</Text>
@@ -197,7 +273,6 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
               placeholder="add tag"
               error={errorsTag.tag?.message}
             />
-
             <ActionIcon color="blue" type="submit" variant="filled">
               <IconPlus />
             </ActionIcon>
@@ -225,117 +300,11 @@ const CardEditor = ({ card }: CardEditorProp): ReactElement => {
 
       <form onSubmit={handleSubmitCard(handleCreateCard)}>
         <Stack spacing="lg">
-          {mode === "classic" as any && (
+
           <Stack spacing="lg">
-            <Controller
-              control={controlCard}
-              rules={{
-                required: "required",
-                maxLength: {
-                  value: 254,
-                  message: "Maximum characters of 254.",
-                },
-              }}
-              name="front"
-              render={({
-                field: {
-                  onChange,
-                  value,
-                },
-              }) => (
-                <TextEditor
-                  label="Front"
-                  type="classic"
-                  content={value}
-                  onChange={onChange}
-                  autofill={autofillFront}
-                />
-              )}
-            />
-            {errorsCard.front && <Text fz="xs" c="red">{errorsCard.front.message}</Text>}
-
-            <Controller
-              control={controlCard}
-              rules={{
-                required: "required",
-                maxLength: {
-                  value: 254,
-                  message: "Maximum characters of 254.",
-                },
-              }}
-              name="back"
-              render={({
-                field: {
-                  onChange,
-                  value,
-                },
-              }) => (
-                <TextEditor
-                  label="Back"
-                  type="classic"
-                  content={value}
-                  onChange={onChange}
-                  autofill={autofillBack}
-                />
-              )}
-            />
-            {errorsCard.back && <Text fz="xs" c="red">{errorsCard.back.message}</Text>}
-          </Stack>
-          )}
-
-          {mode === "cloze" && (
-          <Stack>
-            <Controller
-              control={controlCard}
-              rules={{
-                required: "required",
-                maxLength: {
-                  value: 254,
-                  message: "Maximum characters of 254.",
-                },
-              }}
-              name="cloze"
-              render={({
-                field: {
-                  onChange,
-                },
-              }) => (
-                <TextEditor
-                  label="Cloze content"
-                  type="cloze"
-                  content={(card?.content as any)?.front || ""}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </Stack>
-          )}
-
-          <Stack>
-            <Controller
-              control={controlCard}
-              rules={{
-                maxLength: {
-                  value: 254,
-                  message: "Maximum characters of 254.",
-                },
-              }}
-              name="notes"
-              render={({
-                field: {
-                  onChange,
-                  value,
-                },
-              }) => (
-                <TextEditor
-                  label="Notes"
-                  type="classic"
-                  content={value}
-                  onChange={onChange}
-                />
-              )}
-            />
-            {errorsCard.notes?.message}
+            <TextEditor label={mode === "classic" ? "Front" : "Hint"} type="classic" editor={textEditorFront} />
+            <TextEditor label={mode === "classic" ? "Back" : "Cloze"} type={mode === "classic" ? "classic" : "cloze"} editor={textEditorBack} />
+            <TextEditor label="Notes" type="classic" editor={textEditorNote} />
           </Stack>
 
           <TextInput
