@@ -121,16 +121,19 @@ export = {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "users", key: "id" },
+      onDelete: "CASCADE",
     });
     await queryInterface.addColumn("cards", "deck_id", {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "decks", key: "id" },
+      onDelete: "CASCADE",
     });
     await queryInterface.addColumn("decks", "user_id", {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: { model: "users", key: "id" },
+      onDelete: "CASCADE",
     });
   },
   down: async ({ context: queryInterface }: any) => {
