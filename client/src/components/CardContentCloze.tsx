@@ -1,18 +1,20 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { createStyles, Input, Stack } from "@mantine/core";
+import {
+  createStyles, Input, Stack, Text,
+} from "@mantine/core";
 import { ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface CardContentClozeProps {
-  content: string;
+  content: any;
   handleGuessed: Function;
   guessed: boolean;
 }
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles((theme) => ({
   default: {
     input: {
-      color: "black",
+      color: theme.colorScheme === "dark" ? "white" : "black",
       border: "none",
       borderBottom: "1px solid grey",
       fontSize: "2rem",
@@ -40,12 +42,12 @@ const CardContentCloze = (
   const { register, handleSubmit, setValue } = useForm();
   const { classes, cx } = useStyles();
 
-  const handleGuess = (data: any) => {
-    if (data.cloze.toLowerCase() === content.toLowerCase()) {
+  const handleGuess = (data: any, index: any) => {
+    if (data[`cloze${index}`].toLowerCase() === content.text[index][0].toLowerCase()) {
       handleGuessed(true);
       setIsCorrect(true);
     } else {
-      setValue("cloze", content);
+      setValue(`cloze${index}`, content.text[index][0]);
       handleGuessed(false);
       setIsCorrect(false);
     }
@@ -56,17 +58,25 @@ const CardContentCloze = (
   };
 
   return (
-    <Stack justify="center" h="100%">
-      <form onSubmit={handleSubmit(handleGuess)}>
-        <Input
-          readOnly={guessed}
-          className={cx(classes.default, {
-            [classes.correct]: guessed && isCorrect,
-            [classes.incorrect]: guessed && !isCorrect,
-          })}
-          {...register("cloze")}
-        />
-      </form>
+    <Stack justify="center" h="100%" spacing="lg" align="center">
+      <Text>{content?.hint}</Text>
+      {content.text.map((element: any, index: any) => {
+        if (element[1] === true) {
+          return (
+            <form onSubmit={handleSubmit((data) => handleGuess(data, index))}>
+              <Input
+                readOnly={guessed}
+                className={cx(classes.default, {
+                  [classes.correct]: guessed && isCorrect,
+                  [classes.incorrect]: guessed && !isCorrect,
+                })}
+                {...register(`cloze${index}`)}
+              />
+            </form>
+          );
+        }
+        return <Text>{element[0]}</Text>;
+      })}
     </Stack>
   );
 };

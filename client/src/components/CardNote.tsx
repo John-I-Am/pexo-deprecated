@@ -3,11 +3,11 @@ import { Container, Text } from "@mantine/core";
 import { ReactElement } from "react";
 import parser from "html-react-parser";
 
-const CardNote = ({ notes = "" }: {notes: string | undefined}): ReactElement => {
+const CardNote = ({ notes }: {notes: string | undefined}): ReactElement => {
   console.log("");
   return (
     <Container>
-      <Text>{parser(notes)}</Text>
+      <Text>{parser(notes || "")}</Text>
     </Container>
   );
 };

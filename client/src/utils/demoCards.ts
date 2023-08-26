@@ -36,6 +36,7 @@ for (let i = 0; i < str.length; i++) {
       front: str[i],
       back: `${i + 1}${suffix} letter of the alphabet`,
     },
+    notes: "",
     tags: [],
   };
 
@@ -48,6 +49,7 @@ monthCards.cards.push({
     hint: "1st month of the year",
     text: [["january", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -57,6 +59,7 @@ monthCards.cards.push({
     hint: "2nd month of the year",
     text: [["february", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -66,6 +69,7 @@ monthCards.cards.push({
     hint: "3nd month of the year",
     text: [["march", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -75,6 +79,7 @@ monthCards.cards.push({
     hint: "4th month of the year",
     text: [["april", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -84,6 +89,7 @@ monthCards.cards.push({
     hint: "5th month of the year",
     text: [["may", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -93,6 +99,7 @@ monthCards.cards.push({
     hint: "6th month of the year",
     text: [["june", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -102,6 +109,7 @@ monthCards.cards.push({
     hint: "7th month of the year",
     text: [["july", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -111,6 +119,7 @@ monthCards.cards.push({
     hint: "8th month of the year",
     text: [["August", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -120,6 +129,7 @@ monthCards.cards.push({
     hint: "9th month of the year",
     text: [["september", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -129,6 +139,7 @@ monthCards.cards.push({
     hint: "10th month of the year",
     text: [["october", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -138,6 +149,7 @@ monthCards.cards.push({
     hint: "11th month of the year",
     text: [["november", true]],
   },
+  notes: "",
   tags: [],
 });
 
@@ -147,5 +159,6 @@ monthCards.cards.push({
     hint: "12th month of the year",
     text: [["december", true]],
   },
+  notes: "",
   tags: [],
 });

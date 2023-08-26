@@ -19,6 +19,7 @@ const Card = ({ cardToStudy }: any): ReactElement => {
   };
 
   const handleCorrect = async () => {
+    console.log(cardToStudy);
     await updateCard({
       ...cardToStudy,
       level: cardToStudy.level === 5
@@ -40,10 +41,10 @@ const Card = ({ cardToStudy }: any): ReactElement => {
   };
 
   const renderContent = (): ReactElement => {
-    if (cardToStudy.type === "cloze") {
+    if (cardToStudy.content.type === "cloze") {
       return (
         <CardContentCloze
-          content={cardToStudy.front}
+          content={cardToStudy.content}
           handleGuessed={handleGuessed}
           guessed={guessed}
         />
